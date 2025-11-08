@@ -2,6 +2,8 @@
 
 const Joi = require("joi");
 const { valMsgFormatter } = require("../services/commonFunctions.js");
+const { add } = require("lodash");
+const { note } = require("pdfkit");
 
 function validateUserRegister(req) {
   const schema = Joi.object({
@@ -37,24 +39,63 @@ function validateUserLogin(req) {
   return result;
 }
 
+
 function validateUserEdit(req) {
   const schema = Joi.object({
     userId: Joi.string(),
+    personalTitle: Joi.string().valid("user", "eic", "admin").optional().allow(""),
+    personalName: Joi.string().allow(""),
+    middleInitial: Joi.string().allow(""),
+    familyName: Joi.string().allow(""),
+    gender: Joi.string().valid("female", "male").optional().allow(""),
     profilePic: Joi.string().allow(""),
-    email: Joi.string().allow(""),
-    firstName: Joi.string().min(1).max(20),
-    lastName: Joi.string().min(1).max(50),
-    countryCode: Joi.string().optional().allow(""),
-    isNotification: Joi.boolean(),
-    mobile: Joi.string().optional().allow(""),
-    status: Joi.string().valid("active", "inactive"),
-    deviceToken: Joi.string().allow("").optional(),
-    countryCode: Joi.string().when("mobile", {
-      is: Joi.exist(),
-      then: Joi.string().allow(""),
-      otherwise: Joi.optional().allow(""),
-    }),
-    otpToken: Joi.number().optional().allow(""),
+    address: Joi.string().allow(""),
+    city: Joi.string().allow(""),
+    stateProvince: Joi.string().allow(""),
+    postalCode: Joi.string().allow(""),
+    country: Joi.string().allow(""),
+    primaryTelephone: Joi.string().allow(""),
+    secondaryTelephone: Joi.string().allow(""),
+    receiveSecondaryEmail: Joi.string().optional().allow(""),
+    affiliationUniversity: Joi.string().max(255).optional().allow(""),
+    department: Joi.string().max(255).optional().allow(""),
+    positionTitle: Joi.string().max(255).optional().allow(""),
+    orcid: Joi.string().optional().allow(""),
+    resume: Joi.string().uri().optional().allow(""),
+    bio: Joi.string().max(1000).optional().allow(""),
+    note: Joi.string().max(500).optional().allow(""),
+    websiteUrl: Joi.string().uri().optional().allow(""),
+    socialMedia: Joi.object({
+      twitter: Joi.string().uri().optional().allow(""),
+      facebook: Joi.string().uri().optional().allow(""),
+      googlePlus: Joi.string().uri().optional().allow(""),
+      linkedin: Joi.string().uri().optional().allow("")
+    }).optional(),
+    isiPositions: Joi.array().items(
+      Joi.string().valid(
+        "executive_director",
+        "governor",
+        "fellow",
+        "honorary_fellow",
+        "director",
+        "ambassador",
+        "second_act",
+        "gackowski_award_winner"
+      )
+    ).optional(),
+
+    // Of the Month Feature
+    isReviewerEditorOfMonth: Joi.boolean().optional(),
+    ofTheMonth: Joi.object({
+      type: Joi.string().valid("reviewer", "editor", "").optional().allow(""),
+      month: Joi.string().valid("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "").optional().allow(""),
+      year: Joi.string().pattern(/^\d{4}$/).optional().allow(""),
+    }).optional(),
+
+    testimonial: Joi.string().max(150).optional().allow(""),
+    // Membership
+    memberUntil: Joi.number().integer().optional().allow(null),
+    membershipTypes: Joi.string().valid("isi_member", "isi_sponsored_member",).optional().allow(""),
   });
   const result = schema.validate(req);
   if (result.error) {

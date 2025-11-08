@@ -25,16 +25,58 @@ const userSchema = new mongoose.Schema({
   profilePic: { type: String, default: "" },
   gender: { type: String, enum: ["female", "male", "other"] },
   isNotification: { type: Boolean, default: true },
-  role: {
-    type: String,
-    enum: ["user", "eic", "admin"],
-    default: "user"
-  },
+  role: { type: String, enum: ["user", "eic", "admin"], default: "user" },
   status: { type: String, enum: ["active", "inactive", "deleted"], default: "active" },
   deletedEmail: { type: String },
   deletedMobile: { type: String },
   deletedPersonalName: { type: String },
   deletedFamilyName: { type: String },
+  // aacount info
+  receiveSecondaryEmail: { type: String, default: "" },
+  isiPositions: [{
+    type: String,
+    enum: [
+      "executive_director",
+      "governor",
+      "fellow",
+      "honorary_fellow",
+      "director",
+      "ambassador",
+      "second_act",
+      "gackowski_award_winner"
+    ]
+  }],
+  isReviewerEditorOfMonth: { type: Boolean, default: false },
+  ofTheMonth: {
+    type: { type: String, default: "" },
+    month: { type: String, enum: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""], default: "" },
+    year: { type: String, default: "" },
+  },
+  testimonial: {
+    type: String,
+    maxlength: 150,
+    default: ""
+  },
+  memberUntil: { type: Number },
+  membershipTypes: {
+    type: String,
+    enum: [
+      "isi_member",
+      "isi_sponsored_member",
+    ]
+  },
+  // Academic info
+  positionTitle: { type: String, default: "" },
+  orcid: { type: String, default: "" },
+  resume: { type: String, default: "" },
+  bio: { type: String, default: "" },
+  websiteUrl: { type: String, default: "" },
+  socialMedia: {
+    twitter: { type: String, default: "" },
+    facebook: { type: String, default: "" },
+    googlePlus: { type: String, default: "" },
+    linkedin: { type: String, default: "" }
+  },
   insertDate: { type: Number, default: () => { return Math.round(new Date() / 1000) } },
   updatedDate: { type: Number, default: () => Math.round(Date.now() / 1000) },
 });

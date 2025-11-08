@@ -10,6 +10,7 @@ const admin = require("../routes/admins");
 const user = require("../routes/users");
 const mediaUpload = require("../routes/mediaUpload");
 const banners = require("../routes/banners");
+const journals = require("../routes/journals");
 const faq = require("../routes/faq");
 const webview = require("../routes/webviews");
 const languageMiddleware = require("../middleware/language");
@@ -26,6 +27,7 @@ module.exports = async function (app) {
   app.use("/api/user", user);
   app.use("/api/mediaUpload", mediaUpload);
   app.use("/api/banners", banners);
+  app.use("/api/journal", journals);
   app.use("/api/faq", faq);
   app.use("/api/webviews", webview);
   app.use(error);

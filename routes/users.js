@@ -92,7 +92,7 @@ router.post("/login", async (req, res) => {
   return success(res.header("Authorization", token), req.apiId, USER_CONSTANTS.LOGIN_SUCCESS, response);
 });
 
-router.put("/update", identityManager(["user", "admin", "manager"]), async (req, res) => {
+router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (req, res) => {
   const { error } = validateUserEdit(req.body);
   if (error) return failure(res, req.apiId, error.details[0].message);
 
@@ -107,26 +107,52 @@ router.put("/update", identityManager(["user", "admin", "manager"]), async (req,
   let user = await User.findById(userId);
   if (!user) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_USER);
 
-  user.firstName = req.body.firstName || user.firstName;
-  user.lastName = req.body.lastName || user.lastName;
+  user.personalTitle = req.body.personalTitle || user.personalTitle;
+  user.personalName = req.body.personalName || user.personalName;
+  user.middleInitial = req.body.middleInitial || user.middleInitial;
+  user.familyName = req.body.familyName || user.familyName;
+  user.gender = req.body.gender || user.gender;
   user.profilePic = req.body.profilePic || user.profilePic;
-  user.platformDetails = req.body.platformDetails || user.platformDetails;
+  user.primaryTelephone = req.body.primaryTelephone || user.primaryTelephone;
+  user.secondaryTelephone = req.body.secondaryTelephone || user.secondaryTelephone;
+  user.address = req.body.address || user.address;
+  user.city = req.body.city || user.city;
+  user.stateProvince = req.body.stateProvince || user.stateProvince;
+  user.postalCode = req.body.postalCode || user.postalCode;
+  user.country = req.body.country || user.country;
   user.countryCode = req.body.countryCode || user.countryCode;
-  if (req.body.hasOwnProperty("isNotification")) user.isNotification = req.body.isNotification
-
-
+  user.affiliationUniversity = req.body.affiliationUniversity || user.affiliationUniversity;
+  user.department = req.body.department || user.department;
+  user.positionTitle = req.body.positionTitle || user.positionTitle;
+  user.orcid = req.body.orcid || user.orcid;
+  user.resume = req.body.resume || user.resume;
+  user.bio = req.body.bio || user.bio;
+  user.note = req.body.note || user.note;
+  user.websiteUrl = req.body.websiteUrl || user.websiteUrl;
+  if (req.body.socialMedia) {
+    user.socialMedia.twitter = req.body.socialMedia.twitter || user.socialMedia.twitter;
+    user.socialMedia.facebook = req.body.socialMedia.facebook || user.socialMedia.facebook;
+    user.socialMedia.googlePlus = req.body.socialMedia.googlePlus || user.socialMedia.googlePlus;
+    user.socialMedia.linkedin = req.body.socialMedia.linkedin || user.socialMedia.linkedin;
+  }
+  user.receiveSecondaryEmail = req.body.receiveSecondaryEmail || user.receiveSecondaryEmail;
+  user.isiPositions = req.body.isiPositions || user.isiPositions;
+  if (req.body.hasOwnProperty("isReviewerEditorOfMonth")) {
+    user.isReviewerEditorOfMonth = req.body.isReviewerEditorOfMonth;
+  }
+  if (req.body.ofTheMonth) {
+    user.ofTheMonth.type = req.body.ofTheMonth.type || user.ofTheMonth.type;
+    user.ofTheMonth.month = req.body.ofTheMonth.month || user.ofTheMonth.month;
+    user.ofTheMonth.year = req.body.ofTheMonth.year || user.ofTheMonth.year;
+  }
+  user.testimonial = req.body.testimonial || user.testimonial;
+  user.memberUntil = req.body.memberUntil || user.memberUntil;
+  user.membershipTypes = req.body.membershipTypes || user.membershipTypes;
   if (req.body.status) {
     if (req.body.status != "active") {
       user.accessToken = "";
     }
-
     user.status = req.body.status || user.status;
-  }
-  let tempUser
-  if (req.body.email && req.body.email != user.email) {
-    tempUser = await User.findOne({ email: req.body.email });
-    if (tempUser) return failure(res, req.apiId, USER_CONSTANTS.EMAIL_ALREADY_EXISTS);
-    user.email = req.body.email;
   }
 
 
@@ -134,37 +160,67 @@ router.put("/update", identityManager(["user", "admin", "manager"]), async (req,
   user.userId = user._id.toString();
 
   let response = _.pick(user, [
-    "userId",
-    "role",
-    "email",
-    "firstName",
-    "lastName",
+    "personalTitle",
+    "personalName",
+    "middleInitial",
+    "familyName",
+    "gender",
     "profilePic",
+    "primaryTelephone",
+    "secondaryTelephone",
+    "address",
+    "city",
+    "stateProvince",
+    "postalCode",
+    "country",
     "countryCode",
-    "mobile",
+    "affiliationUniversity",
+    "department",
+    "positionTitle",
+    "orcid",
+    "resume",
+    "bio",
+    "note",
+    "websiteUrl",
+    "receiveSecondaryEmail",
+    "isiPositions",
     "status",
     "insertDate",
-    "isNotification"
   ]);
 
   return success(res, req.apiId, USER_CONSTANTS.EDIT_PROFILE_SUCCESS, response)
 });
 
-router.get("/profile", identityManager(["user"]), async (req, res) => {
+router.get("/profile", identityManager(["user", "superAdmin"]), async (req, res) => {
   const response = await User.findById(
     req.jwtData.userId,
     {
-      role: 1,
-      email: 1,
-      firstName: 1,
-      lastName: 1,
-      userName: 1,
+      personalTitle: 1,
+      personalName: 1,
+      middleInitial: 1,
+      familyName: 1,
+      gender: 1,
       profilePic: 1,
+      primaryTelephone: 1,
+      secondaryTelephone: 1,
+      address: 1,
+      city: 1,
+      stateProvince: 1,
+      postalCode: 1,
+      country: 1,
+      countryCode: 1,
+      affiliationUniversity: 1,
+      department: 1,
+      positionTitle: 1,
+      orcid: 1,
+      resume: 1,
+      bio: 1,
+      note: 1,
+      websiteUrl: 1,
+      receiveSecondaryEmail: 1,
+      isiPositions: 1,
       status: 1,
       insertDate: 1,
-      countryCode: 1,
-      isNotification: 1,
-      mobile: 1,
     }
   ).lean();
 
@@ -176,7 +232,7 @@ router.get("/profile", identityManager(["user"]), async (req, res) => {
   return success(res, req.apiId, USER_CONSTANTS.VIEW_PROFILE_SUCCESS, response);
 });
 
-router.get("/list", identityManager(["admin", "manager"]), async (req, res) => {
+router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) => {
   try {
     let criteria = {};
     criteria.status = { $ne: "deleted" }
@@ -198,31 +254,47 @@ router.get("/list", identityManager(["admin", "manager"]), async (req, res) => {
     const list = await User.aggregate([
       { $match: criteria },
       { $sort: { insertDate: -1 } },
-      {
-        $lookup: {
-          from: "purchasedinsurances",
-          let: { userIdStr: { $toString: "$_id" } },
-          pipeline: [
-            { $match: { $expr: { $eq: ["$userId", "$$userIdStr"] } } },
-            { $count: "count" }
-          ],
-          as: "insuranceCount"
-        }
-      },
+      // {
+      //   $lookup: {
+      //     from: "purchasedinsurances",
+      //     let: { userIdStr: { $toString: "$_id" } },
+      //     pipeline: [
+      //       { $match: { $expr: { $eq: ["$userId", "$$userIdStr"] } } },
+      //       { $count: "count" }
+      //     ],
+      //     as: "insuranceCount"
+      //   }
+      // },
       {
         $project: {
           _id: 0,
           userId: "$_id",
-          role: 1,
-          email: 1,
-          firstName: 1,
-          lastName: 1,
+          personalTitle: 1,
+          personalName: 1,
+          middleInitial: 1,
+          familyName: 1,
+          gender: 1,
           profilePic: 1,
+          primaryTelephone: 1,
+          secondaryTelephone: 1,
+          address: 1,
+          city: 1,
+          stateProvince: 1,
+          postalCode: 1,
+          country: 1,
+          countryCode: 1,
+          affiliationUniversity: 1,
+          department: 1,
+          positionTitle: 1,
+          orcid: 1,
+          resume: 1,
+          bio: 1,
+          note: 1,
+          websiteUrl: 1,
+          receiveSecondaryEmail: 1,
+          isiPositions: 1,
           status: 1,
           insertDate: 1,
-          mobile: 1,
-          countryCode: 1,
-          insuranceCount: { $ifNull: [{ $arrayElemAt: ["$insuranceCount.count", 0] }, 0] }
         }
       },
       {
@@ -295,7 +367,7 @@ router.post("/logout", identityManager(["user"]), async (req, res) => {
   return success(res, req.apiId, USER_CONSTANTS.LOGOUT_SUCCESS);
 });
 
-router.delete("/:id", identityManager(["admin", "user", "manager"]), async (req, res) => {
+router.delete("/:id", identityManager(["admin", "user", "superAdmin"]), async (req, res) => {
   const userId = req.jwtData.role === "admin" ? req.params.id : req.jwtData.userId;
   if (!mongoose.Types.ObjectId.isValid(userId)) return failure(res, req.apiId, USER_CONSTANTS.INVALID_ID);
 
@@ -308,3 +380,4 @@ router.delete("/:id", identityManager(["admin", "user", "manager"]), async (req,
 });
 
 module.exports = router;
+

@@ -530,27 +530,53 @@ const FILE_UPLOAD_CONSTANTS = {
 
 const BANNER_CONSTANTS = {
   CREATE_SUCCESS: {
-    en: "Banner created successfully",
+    en: "Journal created successfully",
     ar: "تم إنشاء اللافتة بنجاح"
   },
   UPDATE_SUCCESS: {
-    en: "Banner updated successfully",
+    en: "Journal updated successfully",
     ar: "تم تحديث اللافتة بنجاح"
   },
   DELETE_SUCCESS: {
-    en: "Banner deleted successfully",
+    en: "Journal deleted successfully",
     ar: "تم حذف اللافتة بنجاح"
   },
   LIST_SUCCESS: {
-    en: "Banners listed successfully",
+    en: "Journal listed successfully",
     ar: "تم سرد اللافتات بنجاح"
   },
   INVALID_BANNER_ID: {
-    en: "Invalid banner ID",
+    en: "Invalid Journal ID",
     ar: "معرف اللافتة غير صالح"
   },
   NOT_FOUND: {
-    en: "Banner not found",
+    en: "Journal not found",
+    ar: "اللافتة غير موجودة"
+  }
+};
+const JOURNAL_CONSTANTS = {
+  CREATE_SUCCESS: {
+    en: "Journal created successfully",
+    ar: "تم إنشاء اللافتة بنجاح"
+  },
+  UPDATE_SUCCESS: {
+    en: "Journal updated successfully",
+    ar: "تم تحديث اللافتة بنجاح"
+  },
+  DELETE_SUCCESS: {
+    en: "Journal deleted successfully",
+    ar: "تم حذف اللافتة بنجاح"
+  },
+  LIST_SUCCESS: {
+    en: "Journal listed successfully",
+    ar: "تم سرد اللافتات بنجاح"
+  },
+  INVALID_JOURNAL_ID: {
+    en: "Invalid Journal ID",
+    ar: "معرف اللافتة غير صالح"
+  },
+  NOT_FOUND: {
+    en: "Journal not found",
     ar: "اللافتة غير موجودة"
   }
 };
@@ -649,6 +675,7 @@ module.exports = {
   CATEGORY_CONSTANTS,
   FILE_UPLOAD_CONSTANTS,
   BANNER_CONSTANTS,
+  JOURNAL_CONSTANTS,
   VALIDATION_CONSTANTS,
   COUPON_CONSTANTS,
   WEBVIEW_CONSTANTS

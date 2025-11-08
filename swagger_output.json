@@ -148,28 +148,28 @@
                 "email": {
                   "example": "any"
                 },
-                "mobile": {
+                "personalName": {
                   "example": "any"
                 },
-                "firstName": {
+                "middleInitial": {
                   "example": "any"
                 },
-                "lastName": {
+                "familyName": {
                   "example": "any"
                 },
-                "userName": {
+                "city": {
                   "example": "any"
                 },
-                "countryCode": {
+                "country": {
                   "example": "any"
                 },
-                "authType": {
+                "affiliationUniversity": {
                   "example": "any"
                 },
-                "profilePic": {
+                "department": {
                   "example": "any"
                 },
-                "deviceToken": {
+                "password": {
                   "example": "any"
                 }
               }
@@ -197,9 +197,6 @@
                   "example": "any"
                 },
                 "password": {
-                  "example": "any"
-                },
-                "deviceToken": {
                   "example": "any"
                 }
               }
@@ -231,31 +228,97 @@
                 "userId": {
                   "example": "any"
                 },
-                "firstName": {
+                "personalTitle": {
                   "example": "any"
                 },
-                "lastName": {
+                "personalName": {
+                  "example": "any"
+                },
+                "middleInitial": {
+                  "example": "any"
+                },
+                "familyName": {
+                  "example": "any"
+                },
+                "gender": {
                   "example": "any"
                 },
                 "profilePic": {
                   "example": "any"
                 },
-                "platformDetails": {
+                "primaryTelephone": {
+                  "example": "any"
+                },
+                "secondaryTelephone": {
+                  "example": "any"
+                },
+                "address": {
+                  "example": "any"
+                },
+                "city": {
+                  "example": "any"
+                },
+                "stateProvince": {
+                  "example": "any"
+                },
+                "postalCode": {
+                  "example": "any"
+                },
+                "country": {
                   "example": "any"
                 },
                 "countryCode": {
                   "example": "any"
                 },
-                "isNotification": {
+                "affiliationUniversity": {
+                  "example": "any"
+                },
+                "department": {
+                  "example": "any"
+                },
+                "positionTitle": {
+                  "example": "any"
+                },
+                "orcid": {
+                  "example": "any"
+                },
+                "resume": {
+                  "example": "any"
+                },
+                "bio": {
+                  "example": "any"
+                },
+                "note": {
+                  "example": "any"
+                },
+                "websiteUrl": {
+                  "example": "any"
+                },
+                "socialMedia": {
+                  "example": "any"
+                },
+                "receiveSecondaryEmail": {
+                  "example": "any"
+                },
+                "isiPositions": {
+                  "example": "any"
+                },
+                "isReviewerEditorOfMonth": {
+                  "example": "any"
+                },
+                "ofTheMonth": {
+                  "example": "any"
+                },
+                "testimonial": {
+                  "example": "any"
+                },
+                "memberUntil": {
+                  "example": "any"
+                },
+                "membershipTypes": {
                   "example": "any"
                 },
                 "status": {
-                  "example": "any"
-                },
-                "mobile": {
-                  "example": "any"
-                },
-                "email": {
                   "example": "any"
                 }
               }
@@ -562,6 +625,202 @@
           },
           {
             "name": "bannerId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/journal/": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "example": "any"
+                },
+                "acronym": {
+                  "example": "any"
+                },
+                "overviewDescription": {
+                  "example": "any"
+                },
+                "legacyExternalUrl": {
+                  "example": "any"
+                },
+                "callForPapersMessage": {
+                  "example": "any"
+                },
+                "onlineIssn": {
+                  "example": "any"
+                },
+                "printIssn": {
+                  "example": "any"
+                },
+                "status": {
+                  "example": "any"
+                },
+                "minimumTopicsPerArticle": {
+                  "example": "any"
+                },
+                "defaultEditorDueDate": {
+                  "example": "any"
+                },
+                "defaultReviewerDueDate": {
+                  "example": "any"
+                },
+                "defaultTotalReviewers": {
+                  "example": "any"
+                },
+                "isAllow": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "journalId": {
+                  "example": "any"
+                },
+                "title": {
+                  "example": "any"
+                },
+                "acronym": {
+                  "example": "any"
+                },
+                "overviewDescription": {
+                  "example": "any"
+                },
+                "legacyExternalUrl": {
+                  "example": "any"
+                },
+                "callForPapersMessage": {
+                  "example": "any"
+                },
+                "onlineIssn": {
+                  "example": "any"
+                },
+                "printIssn": {
+                  "example": "any"
+                },
+                "status": {
+                  "example": "any"
+                },
+                "minimumTopicsPerArticle": {
+                  "example": "any"
+                },
+                "defaultEditorDueDate": {
+                  "example": "any"
+                },
+                "defaultReviewerDueDate": {
+                  "example": "any"
+                },
+                "defaultTotalReviewers": {
+                  "example": "any"
+                },
+                "isAllow": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/journal/{id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/journal/list": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "journalId",
             "in": "query",
             "type": "string"
           },

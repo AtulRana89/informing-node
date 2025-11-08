@@ -44,7 +44,7 @@ function identityManager(allowedRoleArray) {
     }
 
     switch (decoded.role) {
-      case 'admin':
+      case 'superAdmin':
         let admin = await Admin.findOne({ _id: new mongoose.Types.ObjectId(decoded.userId) });
         if (!admin || (admin && admin.accessToken !== token)) return failure(res, req.apiId, MIDDLEWARE_AUTH_CONSTANTS.INVALID_AUTH_TOKEN, {}, 401);
         req.userData = admin;
