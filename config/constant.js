@@ -580,7 +580,32 @@ const JOURNAL_CONSTANTS = {
     ar: "اللافتة غير موجودة"
   }
 };
-
+const CONFERENCE_CONSTANTS = {
+  CREATE_SUCCESS: {
+    en: "Journal created successfully",
+    ar: "تم إنشاء اللافتة بنجاح"
+  },
+  UPDATE_SUCCESS: {
+    en: "Journal updated successfully",
+    ar: "تم تحديث اللافتة بنجاح"
+  },
+  DELETE_SUCCESS: {
+    en: "Journal deleted successfully",
+    ar: "تم حذف اللافتة بنجاح"
+  },
+  LIST_SUCCESS: {
+    en: "Journal listed successfully",
+    ar: "تم سرد اللافتات بنجاح"
+  },
+  INVALID_CONFERENCE_ID: {
+    en: "Invalid Conference ID",
+    ar: "معرف اللافتة غير صالح"
+  },
+  NOT_FOUND: {
+    en: "Journal not found",
+    ar: "اللافتة غير موجودة"
+  }
+};
 const VALIDATION_CONSTANTS = {
   USERID_REQUIRED: {
     en: "User ID is required",
@@ -676,6 +701,7 @@ module.exports = {
   FILE_UPLOAD_CONSTANTS,
   BANNER_CONSTANTS,
   JOURNAL_CONSTANTS,
+  CONFERENCE_CONSTANTS,
   VALIDATION_CONSTANTS,
   COUPON_CONSTANTS,
   WEBVIEW_CONSTANTS
