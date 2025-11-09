@@ -254,17 +254,6 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
     const list = await User.aggregate([
       { $match: criteria },
       { $sort: { insertDate: -1 } },
-      // {
-      //   $lookup: {
-      //     from: "purchasedinsurances",
-      //     let: { userIdStr: { $toString: "$_id" } },
-      //     pipeline: [
-      //       { $match: { $expr: { $eq: ["$userId", "$$userIdStr"] } } },
-      //       { $count: "count" }
-      //     ],
-      //     as: "insuranceCount"
-      //   }
-      // },
       {
         $project: {
           _id: 0,

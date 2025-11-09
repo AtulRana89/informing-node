@@ -18,8 +18,8 @@ const conferenceSchema = new mongoose.Schema({
     updatedDate: { type: Number, default: () => Math.round(Date.now() / 1000) },
 });
 
-journalSchema.index({ status: 1, insertDate: -1 });
-journalSchema.index({ status: 1, title: 1 });
+conferenceSchema.index({ status: 1, insertDate: -1 });
+conferenceSchema.index({ status: 1, title: 1 });
 
 const Conference = mongoose.model("Conference", conferenceSchema);
 
