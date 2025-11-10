@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
     email: req.body.email,
     password: req.body.password,
     status: "active",
-    role: role.body.role
+    role: req.body.role
   });
 
   const token = generateAuthToken(user._id, email, user.role);

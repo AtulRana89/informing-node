@@ -9,7 +9,7 @@ const environment = config.get("environment");
 
 module.exports = async function () {
     try {
-        let query = {}
+        let query = { email: "admin1@support.com" }
         let admin = await Admin.findOne(query);
 
         if (!admin) {
@@ -17,7 +17,7 @@ module.exports = async function () {
             let password = generateHash(defaultPassword);
 
             let newAdmin = {
-                email: "admin@support.com",
+                email: "admin1@support.com",
                 password: password,
                 admin: true,
             }
