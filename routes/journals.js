@@ -104,7 +104,7 @@ router.put("/", identityManager(["superAdmin"]), async (req, res) => {
 
 router.delete("/:id", identityManager(["superAdmin"]), async (req, res) => {
     const journalId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(journalId)) return failure(res, req.apiId, JOURNAL_CONSTANTS.INVALID_BANNER_ID);
+    if (!mongoose.Types.ObjectId.isValid(journalId)) return failure(res, req.apiId, JOURNAL_CONSTANTS.INVALID_JOURNAL_ID);
 
     const journal = await Journal.findById(journalId);
     if (!journal) return failure(res, req.apiId, JOURNAL_CONSTANTS.NOT_FOUND);

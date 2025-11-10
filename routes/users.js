@@ -107,7 +107,7 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   let user = await User.findById(userId);
   if (!user) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_USER);
 
-  user.personalTitle = req.body.personalTitle || user.personalTitle;
+  user.role = req.body.role || user.role;
   user.personalName = req.body.personalName || user.personalName;
   user.middleInitial = req.body.middleInitial || user.middleInitial;
   user.familyName = req.body.familyName || user.familyName;
@@ -160,7 +160,7 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   user.userId = user._id.toString();
 
   let response = _.pick(user, [
-    "personalTitle",
+    "role",
     "personalName",
     "middleInitial",
     "familyName",

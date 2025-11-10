@@ -1,0 +1,106 @@
+// validations/banner.js
+"use strict";
+
+const Joi = require("joi");
+const { valMsgFormatter } = require("../services/commonFunctions");
+
+function validateTopicCreate(data) {
+    const schema = Joi.object({
+        name: Joi.string().required(),
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+function validateTopicUpdate(data) {
+    const schema = Joi.object({
+        topicId: Joi.string().required(),
+        name: Joi.string().required()
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+function validateTopicList(data) {
+    const schema = Joi.object({
+        topicId: Joi.string().optional(),
+        offset: Joi.number().min(0).optional(),
+        limit: Joi.number().min(1).optional()
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+
+
+function validateSubTopicCreate(data) {
+    const schema = Joi.object({
+        topicId: Joi.string().required(),
+        name: Joi.string().required(),
+        minSelections: Joi.string().optional().allow(""),
+        maxSelections: Joi.string().optional().allow(""),
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+function validateSubTopicUpdate(data) {
+    const schema = Joi.object({
+        subTopicId: Joi.string().required(),
+        topicId: Joi.string().required(),
+        name: Joi.string().required(),
+        minSelections: Joi.string().optional().allow(""),
+        maxSelections: Joi.string().optional().allow(""),
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+function validateSubTopicList(data) {
+    const schema = Joi.object({
+        topicId: Joi.string().optional(),
+        offset: Joi.number().min(0).optional(),
+        limit: Joi.number().min(1).optional()
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+module.exports = {
+    validateTopicCreate,
+    validateTopicUpdate,
+    validateTopicList,
+    validateSubTopicCreate,
+    validateSubTopicUpdate,
+    validateSubTopicList
+};

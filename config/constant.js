@@ -442,6 +442,33 @@ const JOURNAL_CONSTANTS = {
     ar: "اللافتة غير موجودة"
   }
 };
+
+const TOPIC_CONSTANTS = {
+  CREATE_SUCCESS: {
+    en: "Topic created successfully",
+    ar: "تم إنشاء اللافتة بنجاح"
+  },
+  UPDATE_SUCCESS: {
+    en: "Topic updated successfully",
+    ar: "تم تحديث اللافتة بنجاح"
+  },
+  DELETE_SUCCESS: {
+    en: "Topic deleted successfully",
+    ar: "تم حذف اللافتة بنجاح"
+  },
+  LIST_SUCCESS: {
+    en: "Topic listed successfully",
+    ar: "تم سرد اللافتات بنجاح"
+  },
+  INVALID_TOPIC_ID: {
+    en: "Invalid Topic ID",
+    ar: "معرف اللافتة غير صالح"
+  },
+  NOT_FOUND: {
+    en: "Topic not found",
+    ar: "اللافتة غير موجودة"
+  }
+};
 const CONFERENCE_CONSTANTS = {
   CREATE_SUCCESS: {
     en: "Journal created successfully",
@@ -565,5 +592,6 @@ module.exports = {
   CONFERENCE_CONSTANTS,
   VALIDATION_CONSTANTS,
   COUPON_CONSTANTS,
-  WEBVIEW_CONSTANTS
+  WEBVIEW_CONSTANTS,
+  TOPIC_CONSTANTS
 };

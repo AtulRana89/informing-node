@@ -245,7 +245,7 @@
                 "userId": {
                   "example": "any"
                 },
-                "personalTitle": {
+                "role": {
                   "example": "any"
                 },
                 "personalName": {

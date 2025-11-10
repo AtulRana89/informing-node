@@ -43,7 +43,7 @@ function validateUserLogin(req) {
 function validateUserEdit(req) {
   const schema = Joi.object({
     userId: Joi.string(),
-    personalTitle: Joi.string().valid("user", "eic", "admin").optional().allow(""),
+    role: Joi.string().valid("user", "eic", "admin").optional().allow(""),
     personalName: Joi.string().allow(""),
     middleInitial: Joi.string().allow(""),
     familyName: Joi.string().allow(""),
