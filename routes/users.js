@@ -280,6 +280,7 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
           bio: 1,
           note: 1,
           websiteUrl: 1,
+          email: 1,
           receiveSecondaryEmail: 1,
           isiPositions: 1,
           status: 1,
