@@ -97,12 +97,9 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   if (error) return failure(res, req.apiId, error.details[0].message);
 
   let userId;
-  if (req.jwtData.role === "superAdmin") {
-    userId = req.jwtData.userId;
-  } else {
-    if (!req.body.userId) return failure(res, req.apiId, USER_CONSTANTS.USERID_REQUIRED);
-    userId = req.body.userId
-  }
+  if (!req.body.userId) return failure(res, req.apiId, USER_CONSTANTS.USERID_REQUIRED);
+  userId = req.body.userId
+
 
   let user = await User.findById(userId);
   if (!user) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_USER);
