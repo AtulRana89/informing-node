@@ -140,6 +140,11 @@
         "description": "",
         "parameters": [
           {
+            "name": "period",
+            "in": "query",
+            "type": "string"
+          },
+          {
             "name": "Authorization",
             "in": "header",
             "type": "string"
@@ -1036,7 +1041,7 @@
             "type": "string"
           },
           {
-            "name": "journalId",
+            "name": "conferenceId",
             "in": "query",
             "type": "string"
           },

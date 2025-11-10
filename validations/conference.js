@@ -30,7 +30,7 @@ function validateConferenceCreate(data) {
 
 function validateConferenceUpdate(data) {
     const schema = Joi.object({
-        journalId: Joi.string().required(),
+        conferenceId: Joi.string().required(),
         title: Joi.string().optional(),
         acronym: Joi.string().optional(),
         message: Joi.string().optional(),
@@ -55,7 +55,7 @@ function validateConferenceUpdate(data) {
 
 function validateConferenceList(data) {
     const schema = Joi.object({
-        journalId: Joi.string().optional(),
+        conferenceId: Joi.string().optional(),
         title: Joi.string().optional(),
         acronym: Joi.string().optional(),
         status: Joi.string().valid("draft", "published", "publishedAll", "archived").optional(),

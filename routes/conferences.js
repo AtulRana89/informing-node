@@ -124,7 +124,7 @@ router.get("/list", identityManager(["user", "superAdmin", "admin"]), async (req
     const skipVal = isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset);
     const limitVal = isNaN(parseInt(req.query.limit)) ? 100 : parseInt(req.query.limit);
 
-    if (req.query.journalId) criteria._id = new mongoose.Types.ObjectId(req.query.journalId);
+    if (req.query.conferenceId) criteria._id = new mongoose.Types.ObjectId(req.query.conferenceId);
     if (req.query.type) criteria.type = req.query.type;
     if (req.query.text) {
         const regexText = new RegExp(req.query.text, "i");
@@ -137,7 +137,7 @@ router.get("/list", identityManager(["user", "superAdmin", "admin"]), async (req
         {
             $project: {
                 _id: 0,
-                journalId: "$_id",
+                conferenceId: "$_id",
                 title: 1,
                 acronym: 1,
                 message: 1,
