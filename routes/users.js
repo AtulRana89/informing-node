@@ -192,8 +192,14 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
 });
 
 router.get("/profile", identityManager(["user", "superAdmin"]), async (req, res) => {
+  let userId;
+  if (req.query.userId) {
+    userId = req.query.userId;
+  } else {
+    userId = req.jwtData.userId;
+  }
   const response = await User.findById(
-    req.jwtData.userId,
+    userId,
     {
       personalTitle: 1,
       personalName: 1,
