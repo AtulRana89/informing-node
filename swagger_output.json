@@ -362,6 +362,11 @@
         "description": "",
         "parameters": [
           {
+            "name": "userId",
+            "in": "query",
+            "type": "string"
+          },
+          {
             "name": "Authorization",
             "in": "header",
             "type": "string"
