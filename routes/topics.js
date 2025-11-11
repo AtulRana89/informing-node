@@ -135,7 +135,7 @@ router.post("/sub", identityManager(["superAdmin"]), async (req, res) => {
     return success(res, req.apiId, TOPIC_CONSTANTS.CREATE_SUCCESS, response);
 });
 
-router.put("/", identityManager(["superAdmin"]), async (req, res) => {
+router.put("/sub", identityManager(["superAdmin"]), async (req, res) => {
     const { error } = validateSubTopicUpdate(req.body);
     if (error) return failure(res, req.apiId, error.details[0].message);
 
@@ -143,17 +143,78 @@ router.put("/", identityManager(["superAdmin"]), async (req, res) => {
     const subTopic = await SubTopic.findById(subTopicId);
     if (!subTopic) return failure(res, req.apiId, TOPIC_CONSTANTS.NOT_FOUND);
 
-    if (req.body.name) subTopic.title = req.body.title;
+    if (req.body.name) subTopic.name = req.body.name;
+    if (req.body.minSelections) subTopic.minSelections = req.body.minSelections;
+    if (req.body.maxSelections) subTopic.maxSelections = req.body.maxSelections;
 
     await subTopic.save();
 
-    const response = _.pick(topic.toObject(), [
+    const response = _.pick(subTopic.toObject(), [
         "_id",
         "name",
+        "minSelections",
+        "maxSelections",
         "insertDate",
         "updatedDate"
     ]);
 
     return success(res, req.apiId, TOPIC_CONSTANTS.UPDATE_SUCCESS, response);
 });
+
+router.delete("/sub/:id", identityManager(["superAdmin"]), async (req, res) => {
+    const subTopicId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(subTopicId)) return failure(res, req.apiId, TOPIC_CONSTANTS.INVALID_TOPIC_ID);
+
+    const subTopic = await SubTopic.findById(subTopicId);
+    if (!subTopic) return failure(res, req.apiId, TOPIC_CONSTANTS.NOT_FOUND);
+
+    await subTopic.deleteOne({ _id: subTopic._id });
+
+    return success(res, req.apiId, TOPIC_CONSTANTS.DELETE_SUCCESS);
+});
+
+router.get("/sub/list", identityManager(["user", "superAdmin", "admin"]), async (req, res) => {
+    const { error } = validateSubTopicList(req.query);
+    if (error) return failure(res, req.apiId, error.details[0].message);
+
+    const criteria = {};
+
+    const skipVal = isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset);
+    const limitVal = isNaN(parseInt(req.query.limit)) ? 100 : parseInt(req.query.limit);
+
+    if (req.query.subTopicId) criteria._id = new mongoose.Types.ObjectId(req.query.subTopicId);
+    if (req.query.type) criteria.type = req.query.type;
+    if (req.query.text) {
+        const regexText = new RegExp(req.query.text, "i");
+        criteria.$or = [{ title: regexText }];
+    }
+
+    const list = await subTopicId.aggregate([
+        { $match: criteria },
+        { $sort: { insertDate: -1 } },
+        {
+            $project: {
+                _id: 0,
+                subTopicId: "$_id",
+                name: 1,
+                minSelections: 1,
+                maxSelections: 1,
+                insertDate: 1,
+                updateDate: 1
+            }
+        },
+        {
+            $facet: {
+                allDocs: [{ $group: { _id: null, totalCount: { $sum: 1 } } }],
+                paginatedDocs: [{ $skip: skipVal }, { $limit: limitVal }]
+            }
+        }
+    ]);
+
+    let totalCount = list[0].allDocs.length > 0 ? list[0].allDocs[0].totalCount : 0;
+    let subTopic = list[0].paginatedDocs;
+
+    return successList(res, req.apiId, TOPIC_CONSTANTS.LIST_SUCCESS, totalCount, subTopic);
+});
+
 module.exports = router;
