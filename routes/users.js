@@ -50,8 +50,8 @@ router.post("/", async (req, res) => {
     role: user.role,
     email: user.email,
   };
-
-  return success(res.header("Authorization", token), req.apiId, USER_CONSTANTS.USER_CREATED_SUCCESS, response);
+  return success(req.apiId, USER_CONSTANTS.USER_CREATED_SUCCESS, response)
+  // return success(res.header("Authorization", token), req.apiId, USER_CONSTANTS.USER_CREATED_SUCCESS, response);
 });
 
 router.post("/login", async (req, res) => {
