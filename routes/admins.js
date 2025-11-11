@@ -82,7 +82,7 @@ router.get("/", identityManager(["admin"]), async (req, res) => {
   return success(res, req.apiId, ADMIN_CONSTANTS.VIEW_PROFILE_SUCCESS, response);
 });
 
-router.post("/change-password", identityManager(["admin"]), async (req, res) => {
+router.post("/change-password", identityManager(["admin", "superAdmin"]), async (req, res) => {
   const { error } = validateChangePassword(req.body);
   if (error) return failure(res, req.apiId, error.details[0].message);
 

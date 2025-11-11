@@ -253,6 +253,9 @@
                 "userId": {
                   "example": "any"
                 },
+                "personalTitle": {
+                  "example": "any"
+                },
                 "role": {
                   "example": "any"
                 },
@@ -317,6 +320,21 @@
                   "example": "any"
                 },
                 "websiteUrl": {
+                  "example": "any"
+                },
+                "allowProfile": {
+                  "example": "any"
+                },
+                "unsubscribe": {
+                  "example": "any"
+                },
+                "receivePrimaryEmail": {
+                  "example": "any"
+                },
+                "receiveReminderEmail": {
+                  "example": "any"
+                },
+                "isPendingAuthor": {
                   "example": "any"
                 },
                 "socialMedia": {

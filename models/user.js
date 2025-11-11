@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema({
   isNotification: { type: Boolean, default: true },
   role: { type: String, enum: ["user", "eic", "admin"], default: "user" },
   status: { type: String, enum: ["active", "inactive", "deleted"], default: "active" },
+  receivePrimaryEmail: { type: Boolean, default: true },
+  receiveReminderEmail: { type: Boolean, default: true },
   deletedEmail: { type: String },
   deletedMobile: { type: String },
   deletedPersonalName: { type: String },
@@ -43,7 +45,14 @@ const userSchema = new mongoose.Schema({
       "director",
       "ambassador",
       "second_act",
-      "gackowski_award_winner"
+      "gackowski_award_winner",
+      "isi_founder",
+      "governor_emeritus",
+      "alumni",
+      "landing_page",
+      "in_watchList",
+      "presented_paper",
+      "best_paper",
     ]
   }],
   isReviewerEditorOfMonth: { type: Boolean, default: false },
@@ -57,19 +66,22 @@ const userSchema = new mongoose.Schema({
     maxlength: 150,
     default: ""
   },
-  memberUntil: { type: Number },
+  memberUntil: { type: String },
   membershipTypes: {
     type: String,
     enum: [
       "isi_member",
       "isi_sponsored_member",
-    ]
+      ""
+    ], default: ""
   },
   // Academic info
   positionTitle: { type: String, default: "" },
   orcid: { type: String, default: "" },
   resume: { type: String, default: "" },
   bio: { type: String, default: "" },
+  allowProfile: { type: Boolean, default: false },
+  unsubscribe: { type: Boolean, default: false },
   websiteUrl: { type: String, default: "" },
   socialMedia: {
     twitter: { type: String, default: "" },
@@ -77,6 +89,7 @@ const userSchema = new mongoose.Schema({
     googlePlus: { type: String, default: "" },
     linkedin: { type: String, default: "" }
   },
+  note: { type: String, default: "" },
   insertDate: { type: Number, default: () => { return Math.round(new Date() / 1000) } },
   updatedDate: { type: Number, default: () => Math.round(Date.now() / 1000) },
 });

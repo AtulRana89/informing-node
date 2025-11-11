@@ -43,6 +43,7 @@ function validateUserLogin(req) {
 function validateUserEdit(req) {
   const schema = Joi.object({
     userId: Joi.string(),
+    personalTitle: Joi.string().valid("Mr", "Ms", "Dr", "Prof", "").optional().allow(""),
     role: Joi.string().valid("user", "eic", "admin").optional().allow(""),
     personalName: Joi.string().allow(""),
     middleInitial: Joi.string().allow(""),
@@ -50,6 +51,7 @@ function validateUserEdit(req) {
     gender: Joi.string().valid("female", "male").optional().allow(""),
     profilePic: Joi.string().allow(""),
     address: Joi.string().allow(""),
+    email: Joi.string().optional(),
     city: Joi.string().allow(""),
     stateProvince: Joi.string().allow(""),
     postalCode: Joi.string().allow(""),
@@ -64,6 +66,12 @@ function validateUserEdit(req) {
     resume: Joi.string().uri().optional().allow(""),
     bio: Joi.string().max(1000).optional().allow(""),
     note: Joi.string().max(500).optional().allow(""),
+    allowProfile: Joi.boolean().optional(),
+    receivePrimaryEmail: Joi.boolean().optional(),
+    receiveReminderEmail: Joi.boolean().optional(),
+    isPendingAuthor: Joi.boolean().optional(),
+    isiFounder: Joi.boolean().optional(),
+    unsubscribe: Joi.boolean().optional(),
     websiteUrl: Joi.string().uri().optional().allow(""),
     socialMedia: Joi.object({
       twitter: Joi.string().uri().optional().allow(""),
@@ -80,7 +88,14 @@ function validateUserEdit(req) {
         "director",
         "ambassador",
         "second_act",
-        "gackowski_award_winner"
+        "gackowski_award_winner",
+        "isi_founder",
+        "governor_emeritus",
+        "alumni",
+        "landing_page",
+        "in_watchList",
+        "presented_paper",
+        "best_paper",
       )
     ).optional(),
 
@@ -94,8 +109,9 @@ function validateUserEdit(req) {
 
     testimonial: Joi.string().max(150).optional().allow(""),
     // Membership
-    memberUntil: Joi.number().integer().optional().allow(null),
-    membershipTypes: Joi.string().valid("isi_member", "isi_sponsored_member",).optional().allow(""),
+    memberUntil: Joi.string().optional().allow(""),
+    membershipTypes: Joi.string().valid("isi_member", "isi_sponsored_member", "").optional().allow(""),
+    status: Joi.string().valid("active", "inactive", "deleted", "").optional().allow("active"),
   });
   const result = schema.validate(req);
   if (result.error) {

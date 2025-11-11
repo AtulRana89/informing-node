@@ -50,7 +50,7 @@ router.post("/", async (req, res) => {
     role: user.role,
     email: user.email,
   };
-  return success(req.apiId, USER_CONSTANTS.USER_CREATED_SUCCESS, response)
+  return success(res, req.apiId, USER_CONSTANTS.USER_CREATED_SUCCESS, response)
   // return success(res.header("Authorization", token), req.apiId, USER_CONSTANTS.USER_CREATED_SUCCESS, response);
 });
 
@@ -104,6 +104,7 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   let user = await User.findById(userId);
   if (!user) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_USER);
 
+  user.personalTitle = req.body.personalTitle || user.personalTitle;
   user.role = req.body.role || user.role;
   user.personalName = req.body.personalName || user.personalName;
   user.middleInitial = req.body.middleInitial || user.middleInitial;
@@ -126,6 +127,22 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   user.bio = req.body.bio || user.bio;
   user.note = req.body.note || user.note;
   user.websiteUrl = req.body.websiteUrl || user.websiteUrl;
+  if (req.body.hasOwnProperty("allowProfile")) {
+    user.allowProfile = req.body.allowProfile;
+  }
+  if (req.body.hasOwnProperty("unsubscribe")) {
+    user.unsubscribe = req.body.unsubscribe;
+  }
+  if (req.body.hasOwnProperty("receivePrimaryEmail")) {
+    user.receivePrimaryEmail = req.body.receivePrimaryEmail;
+  }
+  if (req.body.hasOwnProperty("receiveReminderEmail")) {
+    user.receiveReminderEmail = req.body.receiveReminderEmail;
+  }
+  if (req.body.hasOwnProperty("isPendingAuthor")) {
+    user.isPendingAuthor = req.body.isPendingAuthor;
+  }
+
   if (req.body.socialMedia) {
     user.socialMedia.twitter = req.body.socialMedia.twitter || user.socialMedia.twitter;
     user.socialMedia.facebook = req.body.socialMedia.facebook || user.socialMedia.facebook;
@@ -158,9 +175,13 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
 
   let response = _.pick(user, [
     "role",
+    "personalTitle",
     "personalName",
     "middleInitial",
     "familyName",
+    "allowProfile",
+    "unsubscribe",
+    "socialMedia",
     "gender",
     "profilePic",
     "primaryTelephone",
@@ -177,6 +198,7 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
     "orcid",
     "resume",
     "bio",
+    "testimonial",
     "note",
     "websiteUrl",
     "receiveSecondaryEmail",
@@ -215,14 +237,25 @@ router.get("/profile", identityManager(["user", "superAdmin"]), async (req, res)
       affiliationUniversity: 1,
       department: 1,
       positionTitle: 1,
+      socialMedia: 1,
       orcid: 1,
       resume: 1,
       bio: 1,
       note: 1,
+      email: 1,
+      allowProfile: 1,
+      unsubscribe: 1,
       websiteUrl: 1,
       receiveSecondaryEmail: 1,
       isiPositions: 1,
       status: 1,
+      testimonial: 1,
+      memberUntil: 1,
+      isPendingAuthor: 1,
+      receivePrimaryEmail: 1,
+      receiveReminderEmail: 1,
+      membershipTypes: 1,
+      ofTheMonth: 1,
       insertDate: 1,
     }
   ).lean();
@@ -273,6 +306,7 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
           city: 1,
           stateProvince: 1,
           postalCode: 1,
+          socialMedia: 1,
           country: 1,
           countryCode: 1,
           affiliationUniversity: 1,
@@ -286,6 +320,9 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
           email: 1,
           receiveSecondaryEmail: 1,
           isiPositions: 1,
+          allowProfile: 1,
+          unsubscribe: 1,
+          ofTheMonth: 1,
           status: 1,
           insertDate: 1,
         }

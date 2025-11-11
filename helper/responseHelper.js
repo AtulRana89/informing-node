@@ -1,12 +1,12 @@
 const { translateData } = require("./google-translate");
 
 const success = async (res, apiId, message, data, statusCode) => {
-  const language = res.req.language || "en";
+  // const language = res.req.language || "en";
   let translatedMessage =
-    typeof message === "object" ? message[language] : message;
+    typeof message === "object" ? message["en"] || "Success" : message;
 
   // Translate the data field to include display object
-  const translatedData = await translateData(data, language);
+  // const translatedData = await translateData(data, language);
 
   let response = {
     apiId: apiId,
@@ -14,19 +14,19 @@ const success = async (res, apiId, message, data, statusCode) => {
     status: statusCode || 200,
     data: {
       message: translatedMessage,
-      response: translatedData || {},
+      response: data || {},
     },
   };
   return res.status(response.status).send(response);
 };
 
 const successList = async (res, apiId, message, count, data, statusCode, unreadCount) => {
-  const language = res.req.language || "en";
+  // const language = res.req.language || "en";
   let translatedMessage =
-    typeof message === "object" ? message[language] : message;
+    typeof message === "object" ? message["en"] || "Success" : message;
 
   // Translate the data (list) field to include display object
-  const translatedData = await translateData(data, language);
+  // const translatedData = await translateData(data, language);
 
   let response = {
     apiId: apiId,
@@ -35,7 +35,7 @@ const successList = async (res, apiId, message, count, data, statusCode, unreadC
     data: {
       message: translatedMessage,
       totalCount: count || 0,
-      list: translatedData || [],
+      list: data || [],
     },
   };
   if (unreadCount) {
@@ -45,12 +45,12 @@ const successList = async (res, apiId, message, count, data, statusCode, unreadC
 };
 
 const failure = async (res, apiId, message, data, statusCode) => {
-  const language = res.req.language || "en";
+  // const language = res.req.language || "en";
   let translatedMessage =
-    typeof message === "object" ? message[language] : message;
+    typeof message === "object" ? message["en"] || "Failure" : message;
 
   // Translate the data field to include display object
-  const translatedData = await translateData(data, language);
+  // const translatedData = await translateData(data, language);
 
   let response = {
     apiId: apiId,
@@ -58,7 +58,7 @@ const failure = async (res, apiId, message, data, statusCode) => {
     status: statusCode || 400,
     data: {
       message: translatedMessage,
-      response: translatedData || {},
+      response: data || {},
     },
   };
   res.errorMessage = translatedMessage;
@@ -66,12 +66,12 @@ const failure = async (res, apiId, message, data, statusCode) => {
 };
 
 const internalError = async (res, apiId, message, data) => {
-  const language = res.req.language || "en";
+  // const language = res.req.language || "en";
   let translatedMessage =
-    typeof message === "object" ? message[language] : message;
+    typeof message === "object" ? message["en"] || "Internal Server Error" : message;
 
   // Translate the data field to include display object
-  const translatedData = await translateData(data, language);
+  // const translatedData = await translateData(data, language);
 
   let response = {
     apiId: apiId,
@@ -79,7 +79,7 @@ const internalError = async (res, apiId, message, data) => {
     status: 500,
     data: {
       message: translatedMessage,
-      response: translatedData || {},
+      response: data || {},
     },
   };
   res.errorMessage = translatedMessage;
