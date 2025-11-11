@@ -398,7 +398,7 @@ router.post("/logout", identityManager(["user"]), async (req, res) => {
 });
 
 router.delete("/:id", identityManager(["admin", "user", "superAdmin"]), async (req, res) => {
-  const userId = req.jwtData.role === "admin" ? req.params.id : req.jwtData.userId;
+  const userId = req.jwtData.role === "superAdmin" ? req.params.id : req.jwtData.userId;
   if (!mongoose.Types.ObjectId.isValid(userId)) return failure(res, req.apiId, USER_CONSTANTS.INVALID_ID);
 
   const user = await User.findById(userId);
