@@ -96,11 +96,104 @@ function validateSubTopicList(data) {
     return result;
 }
 
+function validateTrackCreate(data) {
+    const schema = Joi.object({
+        name: Joi.string().required(),
+        description: Joi.string().optional().allow(""),
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+function validateTrackUpdate(data) {
+    const schema = Joi.object({
+        trackId: Joi.string().required(),
+        name: Joi.string().required(),
+        description: Joi.string().optional().allow(""),
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+function validateTrackList(data) {
+    const schema = Joi.object({
+        trackId: Joi.string().optional(),
+        offset: Joi.number().min(0).optional(),
+        limit: Joi.number().min(1).optional()
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+function validateArticleCreate(data) {
+    const schema = Joi.object({
+        name: Joi.string().required(),
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+function validateArticleUpdate(data) {
+    const schema = Joi.object({
+        articleId: Joi.string().required(),
+        name: Joi.string().required(),
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+function validateArticleList(data) {
+    const schema = Joi.object({
+        articleId: Joi.string().optional(),
+        offset: Joi.number().min(0).optional(),
+        limit: Joi.number().min(1).optional()
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
+
 module.exports = {
     validateTopicCreate,
     validateTopicUpdate,
     validateTopicList,
     validateSubTopicCreate,
     validateSubTopicUpdate,
-    validateSubTopicList
+    validateSubTopicList,
+    validateTrackCreate,
+    validateTrackUpdate,
+    validateTrackList,
+    validateArticleCreate,
+    validateArticleUpdate,
+    validateArticleList
 };

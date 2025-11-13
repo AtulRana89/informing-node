@@ -9,7 +9,6 @@ const topicSchema = new mongoose.Schema({
 
 const Topic = mongoose.model("Topic", topicSchema);
 
-module.exports = { Topic };
 
 const subTopicSchema = new mongoose.Schema({
     name: { type: String },
@@ -22,4 +21,21 @@ const subTopicSchema = new mongoose.Schema({
 
 const SubTopic = mongoose.model("SubTopic", subTopicSchema);
 
-module.exports = { SubTopic };
+const trackSchema = new mongoose.Schema({
+    name: { type: String },
+    description: { type: String },
+    insertDate: { type: Number, default: () => { return Math.round(new Date() / 1000) } },
+    updatedDate: { type: Number, default: () => Math.round(Date.now() / 1000) },
+});
+
+const Track = mongoose.model("Track", trackSchema);
+
+const articleSchema = new mongoose.Schema({
+    name: { type: String },
+    insertDate: { type: Number, default: () => { return Math.round(new Date() / 1000) } },
+    updatedDate: { type: Number, default: () => Math.round(Date.now() / 1000) },
+});
+
+const Article = mongoose.model("Article", articleSchema);
+
+module.exports = { Topic, SubTopic, Track, Article };
