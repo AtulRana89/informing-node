@@ -87,7 +87,7 @@ function validateSubTopicUpdate(data) {
 
 function validateSubTopicList(data) {
     const schema = Joi.object({
-        topicId: Joi.string().optional(),
+        subTopicId: Joi.string().optional(),
         offset: Joi.number().min(0).optional(),
         limit: Joi.number().min(1).optional()
     });
