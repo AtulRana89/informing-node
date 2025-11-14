@@ -109,6 +109,8 @@ router.get("/list", identityManager(["user", "superAdmin", "admin"]), async (req
                 _id: 0,
                 topicId: "$_id",
                 name: 1,
+                minSelections: 1,
+                maxSelections: 1,
                 insertDate: 1,
                 updateDate: 1
             }
