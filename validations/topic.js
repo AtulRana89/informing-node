@@ -7,6 +7,8 @@ const { valMsgFormatter } = require("../services/commonFunctions");
 function validateTopicCreate(data) {
     const schema = Joi.object({
         name: Joi.string().required(),
+        minSelections: Joi.string().optional().allow(""),
+        maxSelections: Joi.string().optional().allow(""),
     });
 
     let result = schema.validate(data, { abortEarly: false });
@@ -20,7 +22,9 @@ function validateTopicCreate(data) {
 function validateTopicUpdate(data) {
     const schema = Joi.object({
         topicId: Joi.string().required(),
-        name: Joi.string().required()
+        name: Joi.string().required(),
+        minSelections: Joi.string().optional().allow(""),
+        maxSelections: Joi.string().optional().allow(""),
     });
 
     let result = schema.validate(data, { abortEarly: false });

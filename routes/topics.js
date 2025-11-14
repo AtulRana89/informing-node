@@ -27,6 +27,8 @@ router.post("/", identityManager(["superAdmin"]), async (req, res) => {
 
     const newTopic = new Topic({
         name: req.body.name,
+        minSelections: req.body.minSelections,
+        maxSelections: req.body.maxSelections,
 
     });
 
@@ -35,6 +37,8 @@ router.post("/", identityManager(["superAdmin"]), async (req, res) => {
     const response = _.pick(newTopic.toObject(), [
         "_id",
         "name",
+        "minSelections",
+        "maxSelections",
         "insertDate"
     ]);
 
@@ -52,12 +56,16 @@ router.put("/", identityManager(["superAdmin"]), async (req, res) => {
     if (!topic) return failure(res, req.apiId, TOPIC_CONSTANTS.NOT_FOUND);
 
     if (req.body.name) topic.title = req.body.title;
+    if (req.body.minSelections) topic.minSelections = req.body.minSelections;
+    if (req.body.maxSelections) topic.maxSelections = req.body.maxSelections;
 
     await topic.save();
 
     const response = _.pick(topic.toObject(), [
         "_id",
         "name",
+        "minSelections",
+        "maxSelections",
         "insertDate",
         "updatedDate"
     ]);

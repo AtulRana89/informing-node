@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 
 const topicSchema = new mongoose.Schema({
     name: { type: String },
+    minSelections: { type: String },
+    maxSelections: { type: String },
     insertDate: { type: Number, default: () => { return Math.round(new Date() / 1000) } },
     updatedDate: { type: Number, default: () => Math.round(Date.now() / 1000) },
 });
