@@ -18,17 +18,22 @@ const { validateTopicCreate,
     validateTrackList,
     validateArticleCreate,
     validateArticleUpdate,
-    validateArticleList
+    validateArticleList,
+    validateTopicReorder
 } = require("../validations/topic.js");
 
 router.post("/", identityManager(["superAdmin"]), async (req, res) => {
     const { error } = validateTopicCreate(req.body);
     if (error) return failure(res, req.apiId, error.details[0].message);
 
+    const lastTopic = await Topic.findOne().sort({ sortOrder: -1 });
+    const newSortOrder = lastTopic ? lastTopic.sortOrder + 1 : 0;
+
     const newTopic = new Topic({
         name: req.body.name,
         minSelections: req.body.minSelections,
         maxSelections: req.body.maxSelections,
+        sortOrder: newSortOrder
 
     });
 
@@ -137,10 +142,15 @@ router.post("/sub", identityManager(["superAdmin"]), async (req, res) => {
     const topic = await Topic.findById(topicId);
     if (!topic) return failure(res, req.apiId, TOPIC_CONSTANTS.NOT_FOUND);
 
+
+    const lastTopic = await SubTopic.findOne().sort({ sortOrder: -1 });
+    const newSortOrder = lastTopic ? lastTopic.sortOrder + 1 : 0;
+
     const newSubTopic = new SubTopic({
         name: req.body.name,
         minSelections: req.body.minSelections,
         maxSelections: req.body.maxSelections,
+        sortOrder: newSortOrder,
         topicId: topicId
     });
 
@@ -436,4 +446,32 @@ router.get("/article/list", identityManager(["user", "superAdmin", "admin"]), as
 
     return successList(res, req.apiId, TOPIC_CONSTANTS.LIST_SUCCESS, totalCount, article);
 });
+
+
+router.put("/reorder", identityManager(["superAdmin"]), async (req, res) => {
+    try {
+        const { error } = validateTopicReorder(req.body);
+        if (error) return failure(res, req.apiId, error.details[0].message);
+
+        const { items, type = 'topic' } = req.body;
+        const ModelName = type === 'subtopic' ? SubTopic : Topic;
+
+        const bulkOperations = items.map((item) => ({
+            updateOne: {
+                filter: { _id: item._id },
+                update: {
+                    sortOrder: item.sortOrder,
+                    updatedDate: Math.round(Date.now() / 1000)
+                }
+            }
+        }));
+
+        await ModelName.bulkWrite(bulkOperations);
+
+        return success(res, req.apiId, TOPIC_CONSTANTS.REORDER_SUCCESS);
+    } catch (error) {
+        return failure(res, req.apiId, error.message);
+    }
+});
+
 module.exports = router;

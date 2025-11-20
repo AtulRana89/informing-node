@@ -186,6 +186,25 @@ function validateArticleList(data) {
     return result;
 }
 
+function validateTopicReorder(data) {
+    const schema = Joi.object({
+        type: Joi.string().valid('topic', 'subtopic').default('topic'),
+        items: Joi.array().items(
+            Joi.object({
+                _id: Joi.string().required(),
+                sortOrder: Joi.number().required()
+            })
+        ).required().min(1)
+    });
+
+    let result = schema.validate(data, { abortEarly: false });
+    if (result.error) {
+        console.log("Validation Errors:", result.error.details);
+        result.error.details[0].message = valMsgFormatter(result.error.details[0].message);
+    }
+    return result;
+}
+
 
 module.exports = {
     validateTopicCreate,
@@ -199,5 +218,6 @@ module.exports = {
     validateTrackList,
     validateArticleCreate,
     validateArticleUpdate,
-    validateArticleList
+    validateArticleList,
+    validateTopicReorder
 };

@@ -467,6 +467,10 @@ const TOPIC_CONSTANTS = {
   NOT_FOUND: {
     en: "Topic not found",
     ar: "اللافتة غير موجودة"
+  },
+  REORDER_SUCCESS: {
+    en: "Topics reordered successfully",
+    ar: "تم إعادة ترتيب المواضيع بنجاح"
   }
 };
 const CONFERENCE_CONSTANTS = {
