@@ -286,6 +286,8 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
     }
 
     if (req.query.status) criteria.status = req.query.status;
+    if (req.query.role) criteria.role = req.query.role;
+
 
     const list = await User.aggregate([
       { $match: criteria },
