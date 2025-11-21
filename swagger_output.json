@@ -912,6 +912,12 @@
               "properties": {
                 "name": {
                   "example": "any"
+                },
+                "minSelections": {
+                  "example": "any"
+                },
+                "maxSelections": {
+                  "example": "any"
                 }
               }
             }
@@ -944,6 +950,12 @@
                   "example": "any"
                 },
                 "title": {
+                  "example": "any"
+                },
+                "minSelections": {
+                  "example": "any"
+                },
+                "maxSelections": {
                   "example": "any"
                 }
               }
@@ -1406,6 +1418,38 @@
             "name": "Authorization",
             "in": "header",
             "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/topic/reorder": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "example": "any"
+                },
+                "type": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
