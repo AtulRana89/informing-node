@@ -168,4 +168,75 @@ router.get("/list", identityManager(["user", "superAdmin", "admin"]), async (req
     return successList(res, req.apiId, JOURNAL_CONSTANTS.LIST_SUCCESS, totalCount, journal);
 });
 
+router.get("/combinelist", identityManager(["user", "superAdmin", "admin"]), async (req, res) => {
+
+    const criteria = {};
+
+    const skipVal = isNaN(parseInt(req.query.offset))
+        ? 0
+        : parseInt(req.query.offset);
+    const limitVal = isNaN(parseInt(req.query.limit))
+        ? 100
+        : parseInt(req.query.limit);
+
+    // Search
+    if (req.query.text) {
+        const regexText = new RegExp(req.query.text, "i");
+        criteria.$or = [{ acronym: regexText }];
+    }
+
+    const list = await Journal.aggregate([
+        { $match: criteria },
+
+        // Add a type to identify from which collection
+        { $addFields: { source: "journal" } },
+
+        // Combine with Conference
+        {
+            $unionWith: {
+                coll: "conferences", // your conference collection name
+                pipeline: [
+                    { $match: criteria },
+                    { $addFields: { source: "conference" } }
+                ]
+            }
+        },
+
+        // Sort latest
+        { $sort: { acronym: 1 } },
+
+        // Only return acronym + type + id
+        {
+            $project: {
+                _id: 0,
+                id: "$_id",
+                acronym: 1,
+                source: 1
+            }
+        },
+
+        // Count + Pagination
+        {
+            $facet: {
+                allDocs: [{ $group: { _id: null, totalCount: { $sum: 1 } } }],
+                paginatedDocs: [{ $skip: skipVal }, { $limit: limitVal }]
+            }
+        }
+    ]);
+
+    let totalCount =
+        list[0].allDocs.length > 0 ? list[0].allDocs[0].totalCount : 0;
+    let combined = list[0].paginatedDocs;
+
+    return successList(
+        res,
+        req.apiId,
+        "COMBINED LIST SUCCESS",
+        totalCount,
+        combined
+    );
+}
+);
+
+
 module.exports = router;

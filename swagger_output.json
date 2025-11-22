@@ -417,12 +417,27 @@
             "type": "string"
           },
           {
+            "name": "isiPosition",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "ofTheMonthType",
+            "in": "query",
+            "type": "string"
+          },
+          {
             "name": "text",
             "in": "query",
             "type": "string"
           },
           {
             "name": "status",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "role",
             "in": "query",
             "type": "string"
           },
@@ -874,6 +889,38 @@
           },
           {
             "name": "type",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/journal/combinelist": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
             "in": "query",
             "type": "string"
           },

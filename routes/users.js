@@ -279,10 +279,45 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
     if (req.query.userId) {
       criteria._id = new mongoose.Types.ObjectId(req.query.userId);
     }
+    if (req.query.isiPosition) {
+      const value = req.query.isiPosition; // single value
+
+      const validIsiEnums = [
+        "executive_director",
+        "governor",
+        "fellow",
+        "honorary_fellow",
+        "director",
+        "ambassador",
+        "second_act",
+        "gackowski_award_winner",
+        "isi_founder",
+        "governor_emeritus",
+        "alumni",
+        "landing_page",
+        "in_watchList",
+        "presented_paper",
+        "best_paper",
+      ];
+
+      if (validIsiEnums.includes(value)) {
+        // Search only in isiPositions array
+        criteria.isiPositions = { $in: [value] };
+      }
+
+      if (value === "editor" || value === "reviewer") {
+        // Search only in ofTheMonth.type
+        criteria["ofTheMonth.type"] = value;
+      }
+    }
+
+    if (req.query.ofTheMonthType) {
+      criteria["ofTheMonth.type"] = req.query.ofTheMonthType;
+    }
 
     if (req.query.text) {
       var regexName = new RegExp(req.query.text, "i");
-      criteria.$or = [{ firstName: regexName }, { lastName: regexName }, { email: regexName }, { userName: regexName }];
+      criteria.$or = [{ personalName: regexName }];
     }
 
     if (req.query.status) criteria.status = req.query.status;
