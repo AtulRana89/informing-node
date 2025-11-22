@@ -108,7 +108,7 @@ router.get("/list", identityManager(["user", "superAdmin", "admin"]), async (req
 
     const list = await Topic.aggregate([
         { $match: criteria },
-        { $sort: { insertDate: -1 } },
+        { $sort: { sortOrder: -1 } },
         {
             $project: {
                 _id: 0,
@@ -223,7 +223,7 @@ router.get("/sub/list", identityManager(["user", "superAdmin", "admin"]), async 
 
     const list = await SubTopic.aggregate([
         { $match: criteria },
-        { $sort: { insertDate: -1 } },
+        { $sort: { sortOrder: -1 } },
         {
             $project: {
                 _id: 0,
