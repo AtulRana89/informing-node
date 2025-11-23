@@ -130,6 +130,7 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   if (req.body.hasOwnProperty("allowProfile")) {
     user.allowProfile = req.body.allowProfile;
   }
+
   if (req.body.hasOwnProperty("unsubscribe")) {
     user.unsubscribe = req.body.unsubscribe;
   }
@@ -204,6 +205,7 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
     "receiveSecondaryEmail",
     "isiPositions",
     "status",
+    'isPendingAuthor',
     "insertDate",
   ]);
 
@@ -264,7 +266,7 @@ router.get("/profile", identityManager(["user", "superAdmin"]), async (req, res)
     response.userId = response._id;
     delete response._id;
   }
-
+  console.log("PROFILE RESPONSE:", response);
   return success(res, req.apiId, USER_CONSTANTS.VIEW_PROFILE_SUCCESS, response);
 });
 
@@ -361,6 +363,7 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
           unsubscribe: 1,
           ofTheMonth: 1,
           status: 1,
+          isPendingAuthor: 1,
           insertDate: 1,
         }
       },

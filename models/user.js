@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema({
   deletedFamilyName: { type: String },
   // aacount info
   receiveSecondaryEmail: { type: String, default: "" },
+  isPendingAuthor: { type: Boolean, default: false },
   isiPositions: [{
     type: String,
     enum: [

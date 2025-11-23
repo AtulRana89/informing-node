@@ -48,7 +48,7 @@ function validateUserEdit(req) {
     personalName: Joi.string().allow(""),
     middleInitial: Joi.string().allow(""),
     familyName: Joi.string().allow(""),
-    gender: Joi.string().valid("female", "male").optional().allow(""),
+    gender: Joi.string().valid("female", "male", "other").optional().allow(""),
     profilePic: Joi.string().allow(""),
     address: Joi.string().allow(""),
     email: Joi.string().optional(),
