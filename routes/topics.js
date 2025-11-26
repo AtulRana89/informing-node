@@ -178,6 +178,7 @@ router.put("/sub", identityManager(["superAdmin"]), async (req, res) => {
     if (req.body.name) subTopic.name = req.body.name;
     if (req.body.minSelections) subTopic.minSelections = req.body.minSelections;
     if (req.body.maxSelections) subTopic.maxSelections = req.body.maxSelections;
+    if (req.body.topicId) subTopic.topicId = req.body.topicId;
 
     await subTopic.save();
 
