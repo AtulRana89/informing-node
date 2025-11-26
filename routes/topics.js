@@ -228,6 +228,7 @@ router.get("/sub/list", identityManager(["user", "superAdmin", "admin"]), async 
             $project: {
                 _id: 0,
                 subTopicId: "$_id",
+                topicId: 1,
                 name: 1,
                 minSelections: 1,
                 maxSelections: 1,
