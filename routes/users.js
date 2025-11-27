@@ -35,11 +35,11 @@ router.post("/", async (req, res) => {
     affiliationUniversity: req.body.affiliationUniversity,
     department: req.body.department,
     email: req.body.email,
-    password: req.body.password,
     status: "active",
     role: req.body.role
   });
-
+  var encryptPassword = generateHash(req.body.password);
+  user.password = encryptPassword;
   const token = generateAuthToken(user._id, email, user.role);
   user.accessToken = token;
 
@@ -64,6 +64,9 @@ router.post("/login", async (req, res) => {
   let user = await User.findOne({ email: email, status: "active" });
   if (!user) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_CREDENTIALS);
 
+
+  console.log(req.body.password, user.password);
+  console.log(user.password);
   const validPassword = compareHash(req.body.password, user.password);
   if (!validPassword) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_PASSWORD);
 

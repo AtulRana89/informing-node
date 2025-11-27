@@ -1143,6 +1143,9 @@
                 },
                 "maxSelections": {
                   "example": "any"
+                },
+                "topicId": {
+                  "example": "any"
                 }
               }
             }
