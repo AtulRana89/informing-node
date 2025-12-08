@@ -108,7 +108,10 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   if (!user) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_USER);
 
   user.personalTitle = req.body.personalTitle || user.personalTitle;
-  user.role = req.body.role || user.role;
+  // user.role = req.body.role || user.role;
+  if (req.body.role) {
+    user.role = req.body.role;
+  }
   user.personalName = req.body.personalName || user.personalName;
   user.middleInitial = req.body.middleInitial || user.middleInitial;
   user.familyName = req.body.familyName || user.familyName;
@@ -145,6 +148,9 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   }
   if (req.body.hasOwnProperty("isPendingAuthor")) {
     user.isPendingAuthor = req.body.isPendingAuthor;
+  }
+  if (req.body.hasOwnProperty("isDuplicate")) {
+    user.isDuplicate = req.body.isDuplicate;
   }
 
   if (req.body.socialMedia) {
@@ -327,6 +333,10 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
 
     if (req.query.status) criteria.status = req.query.status;
     if (req.query.role) criteria.role = req.query.role;
+    if (req.query.isDuplicate) {
+      criteria.isDuplicate = req.query.isDuplicate;
+    }
+
 
 
     const list = await User.aggregate([
@@ -367,6 +377,7 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
           ofTheMonth: 1,
           status: 1,
           isPendingAuthor: 1,
+          isDuplicate: 1,
           insertDate: 1,
         }
       },

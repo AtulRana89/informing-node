@@ -191,10 +191,10 @@
                 "department": {
                   "example": "any"
                 },
-                "password": {
+                "role": {
                   "example": "any"
                 },
-                "role": {
+                "password": {
                   "example": "any"
                 }
               }
@@ -337,6 +337,9 @@
                 "isPendingAuthor": {
                   "example": "any"
                 },
+                "isDuplicate": {
+                  "example": "any"
+                },
                 "socialMedia": {
                   "example": "any"
                 },
@@ -438,6 +441,11 @@
           },
           {
             "name": "role",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "isDuplicate",
             "in": "query",
             "type": "string"
           },
@@ -1071,6 +1079,38 @@
           {
             "name": "Authorization",
             "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/topic/topic-with-subtopics": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "topicId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "in": "query",
             "type": "string"
           }
         ],

@@ -44,7 +44,10 @@ function validateUserEdit(req) {
   const schema = Joi.object({
     userId: Joi.string(),
     personalTitle: Joi.string().valid("Mr", "Ms", "Dr", "Prof", "").optional().allow(""),
-    role: Joi.string().valid("user", "eic", "admin").optional().allow(""),
+    // role: Joi.string().valid("user", "eic", "admin").optional().allow(""),
+    roles: Joi.array().items(
+      Joi.string().valid("user", "eic", "admin")
+    ).optional(),
     personalName: Joi.string().allow(""),
     middleInitial: Joi.string().allow(""),
     familyName: Joi.string().allow(""),
@@ -71,6 +74,7 @@ function validateUserEdit(req) {
     receiveReminderEmail: Joi.boolean().optional(),
     isPendingAuthor: Joi.boolean().optional(),
     isiFounder: Joi.boolean().optional(),
+    isDuplicate: Joi.boolean().optional(),
     unsubscribe: Joi.boolean().optional(),
     websiteUrl: Joi.string().uri().optional().allow(""),
     socialMedia: Joi.object({

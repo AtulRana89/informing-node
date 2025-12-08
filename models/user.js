@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
   profilePic: { type: String, default: "" },
   gender: { type: String, enum: ["female", "male", "other"] },
   isNotification: { type: Boolean, default: true },
-  role: { type: String, enum: ["user", "eic", "admin"], default: "user" },
+  role: { type: [String], enum: ["user", "eic", "admin"], default: ["user"] },
   status: { type: String, enum: ["active", "inactive", "deleted"], default: "active" },
   receivePrimaryEmail: { type: Boolean, default: true },
   receiveReminderEmail: { type: Boolean, default: true },
@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
   // aacount info
   receiveSecondaryEmail: { type: String, default: "" },
   isPendingAuthor: { type: Boolean, default: false },
+  isDuplicate: { type: Boolean, default: false },
   isiPositions: [{
     type: String,
     enum: [

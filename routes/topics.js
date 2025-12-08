@@ -134,6 +134,85 @@ router.get("/list", identityManager(["user", "superAdmin", "admin"]), async (req
     return successList(res, req.apiId, TOPIC_CONSTANTS.LIST_SUCCESS, totalCount, topic);
 });
 
+router.get("/topic-with-subtopics", async (req, res) => {
+
+    try {
+        const { error } = validateTopicList(req.query);
+        if (error) return failure(res, req.apiId, error.details[0].message);
+
+        const criteria = {};
+
+        const skipVal = isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset);
+        const limitVal = isNaN(parseInt(req.query.limit)) ? 100 : parseInt(req.query.limit);
+
+        if (req.query.topicId) criteria._id = new mongoose.Types.ObjectId(req.query.topicId);
+        if (req.query.text) {
+            const regexText = new RegExp(req.query.text, "i");
+            criteria.$or = [{ name: regexText }];
+        }
+
+        // Combined aggregation
+        const list = await Topic.aggregate([
+            { $match: criteria },
+            { $sort: { sortOrder: 1 } },
+
+            {
+                $addFields: {
+                    topicIdStr: { $toString: "$_id" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "subtopics",
+                    localField: "topicIdStr",
+                    foreignField: "topicId",
+                    as: "subTopics"
+                }
+            },
+
+            // Project clean structure
+            {
+                $project: {
+                    _id: 0,
+                    topicId: "$_id",
+                    name: 1,
+                    minSelections: 1,
+                    maxSelections: 1,
+                    insertDate: 1,
+                    updatedDate: 1,
+                    subTopics: 1,
+                }
+            },
+
+            // For pagination
+            {
+                $facet: {
+                    allDocs: [{ $group: { _id: null, totalCount: { $sum: 1 } } }],
+                    paginatedDocs: [{ $skip: skipVal }, { $limit: limitVal }]
+                }
+            }
+        ]);
+
+        const totalCount =
+            list[0].allDocs.length > 0 ? list[0].allDocs[0].totalCount : 0;
+
+        const result = list[0].paginatedDocs;
+
+        return successList(
+            res,
+            req.apiId,
+            "TOPIC_WITH_SUBTOPICS_LIST_SUCCESS",
+            totalCount,
+            result
+        );
+
+    } catch (err) {
+        console.error(err);
+        return failure(res, req.apiId, "INTERNAL_SERVER_ERROR");
+    }
+}
+);
+
 // sub topic
 router.post("/sub", identityManager(["superAdmin"]), async (req, res) => {
     const { error } = validateSubTopicCreate(req.body);
