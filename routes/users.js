@@ -332,9 +332,12 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
     }
 
     if (req.query.status) criteria.status = req.query.status;
-    if (req.query.role) criteria.role = req.query.role;
+    // if (req.query.role) criteria.role = req.query.role;
+    if (req.query.role) {
+      criteria.role = { $in: role };
+    }
     if (req.query.isDuplicate) {
-      criteria.isDuplicate = req.query.isDuplicate;
+      criteria.isDuplicate = true;
     }
 
 
