@@ -135,7 +135,6 @@ router.get("/list", identityManager(["user", "superAdmin", "admin"]), async (req
 });
 
 router.get("/topic-with-subtopics", async (req, res) => {
-
     try {
         const { error } = validateTopicList(req.query);
         if (error) return failure(res, req.apiId, error.details[0].message);
