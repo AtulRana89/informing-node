@@ -15,6 +15,7 @@ const journals = require("../routes/journals");
 const topic = require("../routes/topics");
 const conferences = require("../routes/conferences");
 const faq = require("../routes/faq");
+const content = require("../routes/contentManagements");
 const webview = require("../routes/webviews");
 const languageMiddleware = require("../middleware/language");
 
@@ -35,6 +36,7 @@ module.exports = async function (app) {
   app.use("/api/topic", topic);
   app.use("/api/conference", conferences);
   app.use("/api/faq", faq);
+  app.use("/api/content", content);
   app.use("/api/webviews", webview);
   app.use(error);
 };

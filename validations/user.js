@@ -45,7 +45,7 @@ function validateUserEdit(req) {
     userId: Joi.string(),
     personalTitle: Joi.string().valid("Mr", "Ms", "Dr", "Prof", "").optional().allow(""),
     // role: Joi.string().valid("user", "eic", "admin").optional().allow(""),
-    roles: Joi.array().items(
+    role: Joi.array().items(
       Joi.string().valid("user", "eic", "admin")
     ).optional(),
     personalName: Joi.string().allow(""),

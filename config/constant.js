@@ -580,6 +580,34 @@ const WEBVIEW_CONSTANTS = {
   }
 };
 
+
+const CONTENT_CONSTANTS = {
+  CREATE_SUCCESS: {
+    en: "Content created successfully",
+    ar: "تم إنشاء اللافتة بنجاح"
+  },
+  UPDATE_SUCCESS: {
+    en: "Content updated successfully",
+    ar: "تم تحديث اللافتة بنجاح"
+  },
+  DELETE_SUCCESS: {
+    en: "Content deleted successfully",
+    ar: "تم حذف اللافتة بنجاح"
+  },
+  LIST_SUCCESS: {
+    en: "Content listed successfully",
+    ar: "تم سرد اللافتات بنجاح"
+  },
+  INVALID_JOURNAL_ID: {
+    en: "Invalid Content ID",
+    ar: "معرف اللافتة غير صالح"
+  },
+  NOT_FOUND: {
+    en: "Content not found",
+    ar: "اللافتة غير موجودة"
+  }
+};
+
 module.exports = {
   MIDDLEWARE_AUTH_CONSTANTS,
   AUTH_CONSTANTS,
@@ -597,5 +625,6 @@ module.exports = {
   VALIDATION_CONSTANTS,
   COUPON_CONSTANTS,
   WEBVIEW_CONSTANTS,
-  TOPIC_CONSTANTS
+  TOPIC_CONSTANTS,
+  CONTENT_CONSTANTS
 };

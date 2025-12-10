@@ -267,6 +267,7 @@ router.get("/profile", identityManager(["user", "superAdmin"]), async (req, res)
       receiveReminderEmail: 1,
       membershipTypes: 1,
       ofTheMonth: 1,
+      role: 1,
       insertDate: 1,
     }
   ).lean();
@@ -334,7 +335,7 @@ router.get("/list", identityManager(["admin", "superAdmin"]), async (req, res) =
     if (req.query.status) criteria.status = req.query.status;
     // if (req.query.role) criteria.role = req.query.role;
     if (req.query.role) {
-      criteria.role = { $in: role };
+      criteria.role = { $in: [req.query.role] };
     }
     if (req.query.isDuplicate) {
       criteria.isDuplicate = true;
