@@ -7,7 +7,7 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const uploadDirect = multer({ storage });
 const { FILE_UPLOAD_CONSTANTS, AUTH_CONSTANTS, SYSTEM_CONSTANTS } = require("../config/constant.js");
-const { hetznerMediaUploadFunction } = require("../services/hetznerMediaUpload.js");
+// const { hetznerMediaUploadFunction } = require("../services/hetznerMediaUpload.js");
 const { awsS3MediaUploadFunction } = require("../services/awsS3MediaUpload.js");
 // const { gcsMediaUploadFunction } = require("../services/gcsMediaUpload.js");
 const { success, successList, failure, internalError } = require("../helper/responseHelper.js");
@@ -21,10 +21,13 @@ async function uploadMedia({ key, data, contentType, folderName }) {
 
 
     if (config.get('environment') === 'dev') {
-        return hetznerMediaUploadFunction({ key, data, contentType, folderName });
+        console.log("check");
+        // return hetznerMediaUploadFunction({ key, data, contentType, folderName });
         // } else if (config.get('environment') === 'uat') {
         //     return gcsMediaUploadFunction({ key, data, contentType, folderName });
     } else {
+        console.log("check 1");
+
         return awsS3MediaUploadFunction({ key, data, contentType, folderName });
     }
 }
@@ -41,7 +44,7 @@ router.post('/', uploadDirect.single('file'), async (req, res) => {
             key: fileName,
             data: req.file.buffer,
             contentType: req.file.mimetype,
-            folderName: 'aman-global-insurance',
+            folderName: 'inform-data',
         });
 
         const mediaUrl = uploadResult.url;

@@ -1,5 +1,5 @@
 {
-    "environment": "dev",
+    "environment": "prod",
     "projectName": "informing_science",
     "jwtPrivateKey": "unsecureKey",
     "dbLink": "mongodb+srv://atuldev:atuldev123@informing.gru0xos.mongodb.net/?appName=informing",
@@ -16,10 +16,10 @@
     "thawani_secretKey": "",
     "thawani_publishable_key": "",
     "S3-KEY-SOURCE": "",
-    "S3_BUCKET_REGION": "hel1",
-    "S3_BUCKET_NAME": "codknox",
-    "S3_ACCESS_KEY": "",
-    "S3_SECRET_KEY": "",
+    "S3_BUCKET_REGION": "sfo3",
+    "S3_BUCKET_NAME": "inform",
+    "S3_ACCESS_KEY": "DO00NNQY8H6TGRPHXTEB",
+    "S3_SECRET_KEY": "cHGrXyqT3BeHhlr5A3fKnkPnuea20u6KrcE3qTpCR5s",
     "backendUrl": "",
     "googleApiKey": ""
 }

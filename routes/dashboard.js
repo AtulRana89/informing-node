@@ -1,81 +1,137 @@
-"use strict"
+"use strict";
+
 const express = require("express");
 const router = express.Router();
+
 const { success, failure } = require("../helper/responseHelper.js");
-const { ADMIN_CONSTANTS } = require("../config/constant.js")
+const { ADMIN_CONSTANTS } = require("../config/constant.js");
 const { identityManager } = require("../middleware/auth.js");
+
 const { User } = require("../models/user.js");
-const { Journal } = require("../models/journal.js")
-const { Conference } = require("../models/conference.js")
+const { Journal } = require("../models/journal.js");
+const { Conference } = require("../models/conference.js");
 
-router.get("/admin", identityManager(["superAdmin"]), async (req, res) => {
-    try {
-        const { period = "all" } = req.query; // all, weekly, monthly, yearly
+router.get(
+    "/admin",
+    identityManager(["superAdmin"]),
+    async (req, res) => {
+        try {
+            const { period = "all", fromDate, toDate } = req.query;
 
-        const getDateFilter = (periodType) => {
-            const currentDate = new Date();
-            const currentTimestamp = Math.floor(currentDate.getTime() / 1000); // Convert to Unix timestamp
+            /**
+             * Build MongoDB date filter
+             * Priority:
+             * 1️⃣ Calendar (fromDate + toDate)
+             * 2️⃣ Period (weekly/monthly/yearly)
+             * 3️⃣ All (no filter)
+             */
+            const getDateFilter = () => {
+                let startDate;
+                let endDate;
 
-            switch (periodType) {
-                case "weekly":
-                    const oneWeekAgo = new Date(currentDate);
-                    oneWeekAgo.setDate(currentDate.getDate() - 7);
-                    const weeklyTimestamp = Math.floor(oneWeekAgo.getTime() / 1000);
-                    return { insertDate: { $gte: weeklyTimestamp } };
+                /* ===============================
+                   1️⃣ CALENDAR FILTER (HIGHEST)
+                =============================== */
+                if (fromDate && toDate) {
+                    startDate = new Date(fromDate);
+                    endDate = new Date(toDate);
+                    endDate.setHours(23, 59, 59, 999);
 
-                case "monthly":
-                    const oneMonthAgo = new Date(currentDate);
-                    oneMonthAgo.setMonth(currentDate.getMonth() - 1);
-                    const monthlyTimestamp = Math.floor(oneMonthAgo.getTime() / 1000);
-                    return { insertDate: { $gte: monthlyTimestamp } };
+                    return {
+                        insertDate: {
+                            $gte: Math.floor(startDate.getTime() / 1000),
+                            $lte: Math.floor(endDate.getTime() / 1000),
+                        },
+                    };
+                }
 
-                case "yearly":
-                    const oneYearAgo = new Date(currentDate);
-                    oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
-                    const yearlyTimestamp = Math.floor(oneYearAgo.getTime() / 1000);
-                    return { insertDate: { $gte: yearlyTimestamp } };
+                /* ===============================
+                   2️⃣ PERIOD FILTER
+                =============================== */
+                const now = new Date();
 
-                default:
-                    return {};
-            }
-        };
+                switch (period) {
+                    case "weekly": {
+                        // Monday → today
+                        const day = now.getDay(); // 0 = Sunday
+                        const diff = day === 0 ? -6 : 1 - day;
+                        startDate = new Date(now);
+                        startDate.setDate(now.getDate() + diff);
+                        break;
+                    }
 
-        const dateFilter = getDateFilter(period);
+                    case "monthly":
+                        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                        break;
 
-        // Build queries
-        const baseUserQuery = period === "all" ? {} : dateFilter;
-        const baseContentQuery = period === "all" ? {} : dateFilter;
+                    case "yearly":
+                        startDate = new Date(now.getFullYear(), 0, 1);
+                        break;
 
-        const [
-            activeUsers,
-            inactiveUsers,
-            deletedUsers,
-            totalJournal,
-            totalConference
-        ] = await Promise.all([
-            User.countDocuments({ ...baseUserQuery, status: "active" }),
-            User.countDocuments({ ...baseUserQuery, status: "inactive" }),
-            User.countDocuments({ ...baseUserQuery, status: "deleted" }),
-            Journal.countDocuments(baseContentQuery),
-            Conference.countDocuments(baseContentQuery)
-        ]);
+                    default:
+                        return {}; // all
+                }
 
-        const totalUsers = activeUsers + inactiveUsers;
+                startDate.setHours(0, 0, 0, 0);
 
-        const response = {
-            period: period,
-            totalUsers,
-            activeUsers,
-            inactiveUsers,
-            deletedUsers,
-            totalJournal,
-            totalConference
-        };
+                return {
+                    insertDate: {
+                        $gte: Math.floor(startDate.getTime() / 1000),
+                    },
+                };
+            };
 
-        return success(res, req.apiId, ADMIN_CONSTANTS.SUCCESS, response);
-    } catch (error) {
-        return failure(res, req.apiId, error.message);
+            const dateFilter = getDateFilter();
+
+            /* ===============================
+               APPLY FILTERS
+            =============================== */
+            const baseUserQuery =
+                period === "all" && !fromDate ? {} : dateFilter;
+
+            const baseContentQuery =
+                period === "all" && !fromDate ? {} : dateFilter;
+
+            /* ===============================
+               DB COUNTS
+            =============================== */
+            const [
+                activeUsers,
+                inactiveUsers,
+                deletedUsers,
+                totalJournal,
+                totalConference,
+            ] = await Promise.all([
+                User.countDocuments({ ...baseUserQuery, status: "active" }),
+                User.countDocuments({ ...baseUserQuery, status: "inactive" }),
+                User.countDocuments({ ...baseUserQuery, status: "deleted" }),
+                Journal.countDocuments(baseContentQuery),
+                Conference.countDocuments(baseContentQuery),
+            ]);
+
+            const totalUsers = activeUsers + inactiveUsers;
+
+            /* ===============================
+               RESPONSE
+            =============================== */
+            const response = {
+                period,
+                fromDate: fromDate || null,
+                toDate: toDate || null,
+                totalUsers,
+                activeUsers,
+                inactiveUsers,
+                deletedUsers,
+                totalJournal,
+                totalConference,
+            };
+
+            return success(res, req.apiId, ADMIN_CONSTANTS.SUCCESS, response);
+        } catch (error) {
+            console.error("Dashboard Error:", error);
+            return failure(res, req.apiId, error.message);
+        }
     }
-});
+);
 
 module.exports = router;
