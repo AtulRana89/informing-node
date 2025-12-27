@@ -263,6 +263,12 @@
                 "userId": {
                   "example": "any"
                 },
+                "membershipType": {
+                  "example": "any"
+                },
+                "planId": {
+                  "example": "any"
+                },
                 "personalTitle": {
                   "example": "any"
                 },
@@ -2110,6 +2116,38 @@
           },
           "400": {
             "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/plan/list": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
           }
         }
       }

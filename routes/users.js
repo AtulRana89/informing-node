@@ -11,7 +11,8 @@ const { generateHash, compareHash } = require("../services/bcrypt.js");
 const { OTP_CONSTANTS, USER_CONSTANTS, AUTH_CONSTANTS } = require("../config/constant.js");
 const { validateUserRegister, validateUserEdit, validateUserLogin, validateForgotResetPasswordEmail, validateChangePassword } = require("../validations/user.js");
 const { User } = require("../models/user.js");
-// const { Notification } = require("../models/notification.js");
+const { createPayPalSubscription, cancelSubscription } = require("../services/paypal.js");
+const { Subscription } = require("../models/subscription.js");
 
 // const { sendFcmNotification } = require("../services/fcmModule.js");
 
@@ -107,6 +108,10 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   let user = await User.findById(userId);
   if (!user) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_USER);
 
+  if (req.body.membershipType && req.body.membershipType !== user.membershipType) {
+    await handleMembershipChange(user, req.body.membershipType, req.body.planId);
+  }
+
   user.personalTitle = req.body.personalTitle || user.personalTitle;
   // user.role = req.body.role || user.role;
   if (req.body.role) {
@@ -178,7 +183,10 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
     }
     user.status = req.body.status || user.status;
   }
-
+  if (req.body.changePassword) {
+    let encryptPassword = generateHash(req.body.changePassword);
+    user.password = encryptPassword;
+  }
 
   await user.save();
   user.userId = user._id.toString();
@@ -466,6 +474,91 @@ router.delete("/:id", identityManager(["admin", "user", "superAdmin"]), async (r
 
   return success(res, req.apiId, USER_CONSTANTS.DELETED_SUCCESSFULLY);
 });
+
+async function handleMembershipChange(user, newMembershipType, planId) {
+  try {
+    // FREE Membership
+    if (newMembershipType === 'FREE') {
+      user.membershipType = 'FREE';
+      user.membershipStatus = 'ACTIVE';
+      user.paypalSubscriptionId = null;
+      user.subscriptionPlanId = null;
+
+      // Create free subscription record
+      await Subscription.create({
+        planType: 'FREE_ASSOCIATE',
+        duration: 'ASSOCIATE',
+        userId: user._id,
+        planId: 'FREE',
+        paymentStatus: 'FREE',
+        status: 'ACTIVE',
+        amount: '0',
+        startDate: new Date(),
+        endDate: null,
+      });
+
+      return { approvalRequired: false };
+    }
+
+    // PAID Membership (BASIC or SPONSORING)
+    if (!planId) {
+      throw new Error('Plan ID is required for paid membership');
+    }
+
+    // Check if user already has active PayPal subscription
+    if (user.paypalSubscriptionId) {
+      // Cancel existing subscription first
+      await cancelSubscription({
+        subscriptionId: user.paypalSubscriptionId,
+        reason: "Changing membership plan"
+      });
+    }
+
+    // Create new subscription using PayPal service
+    const subscriptionData = {
+      planId: planId,
+      userData: {
+        personalName: user.personalName,
+        familyName: user.familyName,
+        email: user.email
+      },
+      customId: user._id.toString(),
+      membershipType: newMembershipType
+    };
+
+    const paypalResult = await paypalService.createSubscription(subscriptionData);
+
+    // Update user with pending subscription
+    user.membershipType = newMembershipType;
+    user.membershipStatus = 'PENDING';
+    user.paypalSubscriptionId = paypalResult.subscriptionId;
+    user.subscriptionPlanId = planId;
+
+    // Create subscription record
+    const amount = newMembershipType === 'BASIC' ? 75 : 1000;
+
+    await Subscription.create({
+      userId: user._id,
+      planId: planId,
+      membershipType: newMembershipType,
+      paypalSubscriptionId: paypalResult.subscriptionId,
+      status: 'PENDING',
+      amount: amount,
+      customId: user._id.toString()
+    });
+
+    // Return approval URL for frontend to redirect
+    return {
+      approvalRequired: true,
+      approvalUrl: paypalResult.approvalUrl,
+      subscriptionId: paypalResult.subscriptionId
+    };
+
+  } catch (error) {
+    console.error('Membership change error:', error);
+    throw error;
+  }
+}
 
 module.exports = router;
 

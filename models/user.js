@@ -92,6 +92,11 @@ const userSchema = new mongoose.Schema({
     linkedin: { type: String, default: "" }
   },
   note: { type: String, default: "" },
+  freeMember: { type: Boolean, default: true },
+  membershipType: { type: String, enum: ["FREE", "BASIC", "SPONSORING"], default: "FREE" },
+  membershipStatus: { type: String, enum: ["ACTIVE", "PENDING", "EXPIRED", "CANCELLED"], default: "ACTIVE" },
+  subscriptionPlanId: { type: String },
+  paypalSubscriptionId: { type: String },
   insertDate: { type: Number, default: () => { return Math.round(new Date() / 1000) } },
   updatedDate: { type: Number, default: () => Math.round(Date.now() / 1000) },
 });

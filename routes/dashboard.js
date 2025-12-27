@@ -18,20 +18,10 @@ router.get(
         try {
             const { period = "all", fromDate, toDate } = req.query;
 
-            /**
-             * Build MongoDB date filter
-             * Priority:
-             * 1️⃣ Calendar (fromDate + toDate)
-             * 2️⃣ Period (weekly/monthly/yearly)
-             * 3️⃣ All (no filter)
-             */
             const getDateFilter = () => {
                 let startDate;
                 let endDate;
 
-                /* ===============================
-                   1️⃣ CALENDAR FILTER (HIGHEST)
-                =============================== */
                 if (fromDate && toDate) {
                     startDate = new Date(fromDate);
                     endDate = new Date(toDate);
@@ -45,9 +35,6 @@ router.get(
                     };
                 }
 
-                /* ===============================
-                   2️⃣ PERIOD FILTER
-                =============================== */
                 const now = new Date();
 
                 switch (period) {
@@ -83,18 +70,12 @@ router.get(
 
             const dateFilter = getDateFilter();
 
-            /* ===============================
-               APPLY FILTERS
-            =============================== */
             const baseUserQuery =
                 period === "all" && !fromDate ? {} : dateFilter;
 
             const baseContentQuery =
                 period === "all" && !fromDate ? {} : dateFilter;
 
-            /* ===============================
-               DB COUNTS
-            =============================== */
             const [
                 activeUsers,
                 inactiveUsers,
@@ -111,9 +92,6 @@ router.get(
 
             const totalUsers = activeUsers + inactiveUsers;
 
-            /* ===============================
-               RESPONSE
-            =============================== */
             const response = {
                 period,
                 fromDate: fromDate || null,

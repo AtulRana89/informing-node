@@ -1,5 +1,6 @@
 {
     "environment": "prod",
+    "PAYPAL_ENVIRONMENT": "DEV",
     "projectName": "informing_science",
     "jwtPrivateKey": "unsecureKey",
     "dbLink": "mongodb+srv://atuldev:atuldev123@informing.gru0xos.mongodb.net/?appName=informing",
@@ -21,5 +22,8 @@
     "S3_ACCESS_KEY": "DO00NNQY8H6TGRPHXTEB",
     "S3_SECRET_KEY": "cHGrXyqT3BeHhlr5A3fKnkPnuea20u6KrcE3qTpCR5s",
     "backendUrl": "",
-    "googleApiKey": ""
+    "googleApiKey": "",
+    "PAYPAL_CLIENT_ID": "your_client_id",
+    "PAYPAL_CLIENT_SECRET": "your_client_secret",
+    "FRONTEND_URL": "http://localhost:3000"
 }

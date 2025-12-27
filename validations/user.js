@@ -116,6 +116,7 @@ function validateUserEdit(req) {
     memberUntil: Joi.string().optional().allow(""),
     membershipTypes: Joi.string().valid("isi_member", "isi_sponsored_member", "").optional().allow(""),
     status: Joi.string().valid("active", "inactive", "deleted", "").optional().allow("active"),
+    changePassword: Joi.string().optional(),
   });
   const result = schema.validate(req);
   if (result.error) {
