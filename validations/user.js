@@ -17,6 +17,8 @@ function validateUserRegister(req) {
     department: Joi.string().required(),
     password: Joi.string().required(),
     role: Joi.string().valid("user", "eic", "admin").required(),
+    paymentType: Joi.string().optional().allow(""),
+    planId: Joi.string().optional().allow(""),
   });
 
   const result = schema.validate(req);

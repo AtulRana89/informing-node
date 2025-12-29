@@ -46,11 +46,24 @@ router.post("/", async (req, res) => {
 
   await user.save();
 
+
+  let membershipResponse = null;
+  if (req.body.paymentType == "MEMBER") {
+    membershipResponse = await handleMembershipChange(user, req.body.paymentType, req.body.planId);
+  }
   const response = {
     _id: user._id,
     role: user.role,
-    email: user.email,
+    email: user.email
   };
+  if (membershipResponse) {
+    response.subscriptionPlanId = membershipResponse.subscriptionId;
+    response.approvalRequired = membershipResponse.approvalRequired;
+    response.approvalUrl = membershipResponse.approvalUrl;
+    response.status = membershipResponse.status;
+    response.links = membershipResponse.links;
+  }
+
   return success(res, req.apiId, USER_CONSTANTS.USER_CREATED_SUCCESS, response)
   // return success(res.header("Authorization", token), req.apiId, USER_CONSTANTS.USER_CREATED_SUCCESS, response);
 });
@@ -108,9 +121,9 @@ router.put("/update", identityManager(["user", "admin", "superAdmin"]), async (r
   let user = await User.findById(userId);
   if (!user) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_USER);
 
-  if (req.body.membershipType && req.body.membershipType !== user.membershipType) {
-    await handleMembershipChange(user, req.body.membershipType, req.body.planId);
-  }
+  // if (req.body.membershipType && req.body.membershipType !== user.membershipType) {
+  //   await handleMembershipChange(user, req.body.membershipType, req.body.planId);
+  // }
 
   user.personalTitle = req.body.personalTitle || user.personalTitle;
   // user.role = req.body.role || user.role;
@@ -477,45 +490,21 @@ router.delete("/:id", identityManager(["admin", "user", "superAdmin"]), async (r
 
 async function handleMembershipChange(user, newMembershipType, planId) {
   try {
-    // FREE Membership
-    if (newMembershipType === 'FREE') {
-      user.membershipType = 'FREE';
-      user.membershipStatus = 'ACTIVE';
-      user.paypalSubscriptionId = null;
-      user.subscriptionPlanId = null;
-
-      // Create free subscription record
-      await Subscription.create({
-        planType: 'FREE_ASSOCIATE',
-        duration: 'ASSOCIATE',
-        userId: user._id,
-        planId: 'FREE',
-        paymentStatus: 'FREE',
-        status: 'ACTIVE',
-        amount: '0',
-        startDate: new Date(),
-        endDate: null,
-      });
-
-      return { approvalRequired: false };
-    }
-
     // PAID Membership (BASIC or SPONSORING)
     if (!planId) {
       throw new Error('Plan ID is required for paid membership');
     }
 
     // Check if user already has active PayPal subscription
-    if (user.paypalSubscriptionId) {
-      // Cancel existing subscription first
-      await cancelSubscription({
-        subscriptionId: user.paypalSubscriptionId,
-        reason: "Changing membership plan"
-      });
-    }
+    // if (user.paypalSubscriptionId) {
+    //   // Cancel existing subscription first
+    //   await cancelSubscription({
+    //     subscriptionId: user.paypalSubscriptionId,
+    //     reason: "Changing membership plan"
+    //   });
+    // }
 
-    // Create new subscription using PayPal service
-    const subscriptionData = {
+    const subscriptionData = await createPayPalSubscription({
       planId: planId,
       userData: {
         personalName: user.personalName,
@@ -523,15 +512,13 @@ async function handleMembershipChange(user, newMembershipType, planId) {
         email: user.email
       },
       customId: user._id.toString(),
-      membershipType: newMembershipType
-    };
-
-    const paypalResult = await paypalService.createSubscription(subscriptionData);
+      // membershipType: plan
+    });
 
     // Update user with pending subscription
     user.membershipType = newMembershipType;
     user.membershipStatus = 'PENDING';
-    user.paypalSubscriptionId = paypalResult.subscriptionId;
+    user.paypalSubscriptionId = subscriptionData.subscriptionId;
     user.subscriptionPlanId = planId;
 
     // Create subscription record
@@ -540,18 +527,28 @@ async function handleMembershipChange(user, newMembershipType, planId) {
     await Subscription.create({
       userId: user._id,
       planId: planId,
-      membershipType: newMembershipType,
-      paypalSubscriptionId: paypalResult.subscriptionId,
+      planType: 'BASIC',
+      paypalSubscriptionId: subscriptionData.subscriptionId,
       status: 'PENDING',
+      paymentStatus: 'PENDING',
       amount: amount,
-      customId: user._id.toString()
+      startDate: new Date(),
+      endDate: null,
     });
+
+
+    // planType: { type: String, enum: ["FREE_ASSOCIATE", "BASIC", "SPONSORING"], required: true },
+    // duration: { type: String, enum: ["1_YEAR", "5_YEAR", "LIFE", "ASSOCIATE"] },
+    // transactionId: { type: String },
+    // paypalOrderId: { type: String },
 
     // Return approval URL for frontend to redirect
     return {
       approvalRequired: true,
-      approvalUrl: paypalResult.approvalUrl,
-      subscriptionId: paypalResult.subscriptionId
+      subscriptionId: subscriptionData.subscriptionId,
+      approvalUrl: subscriptionData.approvalUrl,
+      status: subscriptionData.status,
+      links: subscriptionData.links
     };
 
   } catch (error) {
@@ -559,6 +556,145 @@ async function handleMembershipChange(user, newMembershipType, planId) {
     throw error;
   }
 }
+
+async function handleMembershipChange1(user, newMembershipType, planId) {
+  try {
+    // FREE Membership
+    // if (newMembershipType === 'FREE') {
+    //   user.membershipType = 'FREE';
+    //   user.membershipStatus = 'ACTIVE';
+    //   user.paypalSubscriptionId = null;
+    //   user.subscriptionPlanId = null;
+
+    //   // Create free subscription record
+    //   await Subscription.create({
+    //     planType: 'FREE_ASSOCIATE',
+    //     duration: 'ASSOCIATE',
+    //     userId: user._id,
+    //     planId: 'FREE',
+    //     paymentStatus: 'FREE',
+    //     status: 'ACTIVE',
+    //     amount: '0',
+    //     startDate: new Date(),
+    //     endDate: null,
+    //   });
+    //   return { approvalRequired: false };
+    // }
+
+    // PAID Membership (BASIC or SPONSORING)
+    if (!planId) {
+      throw new Error('Plan ID is required for paid membership');
+    }
+
+    // Check if user already has active PayPal subscription
+    // if (user.paypalSubscriptionId) {
+    //   // Cancel existing subscription first
+    //   await cancelSubscription({
+    //     subscriptionId: user.paypalSubscriptionId,
+    //     reason: "Changing membership plan"
+    //   });
+    // }
+
+    const subscriptionData = await createPayPalSubscription({
+      planId: planId,
+      userData: {
+        personalName: user.personalName,
+        familyName: user.familyName,
+        email: user.email
+      },
+      customId: user._id.toString(),
+      // membershipType: plan
+    });
+
+    // Update user with pending subscription
+    user.membershipType = newMembershipType;
+    user.membershipStatus = 'PENDING';
+    user.paypalSubscriptionId = subscriptionData.subscriptionId;
+    user.subscriptionPlanId = planId;
+
+    // Create subscription record
+    const amount = newMembershipType === 'BASIC' ? 75 : 1000;
+
+    await Subscription.create({
+      userId: user._id,
+      planId: planId,
+      planType: 'BASIC',
+      paypalSubscriptionId: paypalResult.subscriptionId,
+      status: 'PENDING',
+      paymentStatus: 'PENDING',
+      amount: amount,
+      startDate: new Date(),
+      endDate: null,
+    });
+
+
+    // planType: { type: String, enum: ["FREE_ASSOCIATE", "BASIC", "SPONSORING"], required: true },
+    // duration: { type: String, enum: ["1_YEAR", "5_YEAR", "LIFE", "ASSOCIATE"] },
+    // transactionId: { type: String },
+    // paypalOrderId: { type: String },
+
+    // Return approval URL for frontend to redirect
+    return {
+      approvalRequired: true,
+      subscriptionId: subscriptionData.subscriptionId,
+      approvalUrl: subscriptionData.approvalUrl,
+      status: subscriptionData.status,
+      links: subscriptionData.links
+    };
+
+  } catch (error) {
+    console.error('Membership change error:', error);
+    throw error;
+  }
+}
+
+router.post("/create-subscription", async (req, res) => {
+  try {
+    // const { userId, plan } = req.body;
+
+    // // Validate user
+    // const user = await User.findById(userId);
+    // if (!user) {
+    //   return failure(res, req.apiId, 'User not found');
+    // }
+
+    // Check if user already has active subscription
+    // if (user.paypalSubscriptionId && user.paypalSubscriptionStatus === 'ACTIVE') {
+    //   return failure(res, req.apiId, 'User already has an active subscription');
+    // }
+
+
+    // Create PayPal subscription
+    const subscriptionData = await createPayPalSubscription({
+      planId: 'P-98P507856D497622UNFETDNA',
+      userData: {
+        personalName: 'atul',
+        familyName: 'atul',
+        email: 'atulrana076@gmail.com',
+      },
+      customId: 'dadasdasdas',
+      // membershipType: plan
+    });
+
+    // Update user with subscription info
+    // user.paypalSubscriptionId = subscriptionData.subscriptionId;
+    // user.paypalSubscriptionStatus = subscriptionData.status;
+    // user.plan = plan;
+    // await user.save();
+
+    const response = {
+      subscriptionId: subscriptionData.subscriptionId,
+      approvalUrl: subscriptionData.approvalUrl,
+      status: subscriptionData.status,
+      links: subscriptionData.links
+    };
+
+    return success(res, req.apiId, 'Subscription created successfully', response);
+  } catch (error) {
+    console.error('Create subscription error:', error);
+    return failure(res, req.apiId, error.message || 'Failed to create subscription');
+  }
+});
 
 module.exports = router;
 

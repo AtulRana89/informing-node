@@ -30,7 +30,7 @@ async function createPayPalSubscription({ planId, userData, customId, membership
 
         const request = {
             body: {
-                plan_id: planId,
+                planId: planId,
                 custom_id: customId,
                 application_context: {
                     brand_name: "ISI",
@@ -41,8 +41,10 @@ async function createPayPalSubscription({ planId, userData, customId, membership
                         payer_selected: "PAYPAL",
                         payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED"
                     },
-                    return_url: `${config.get('FRONTEND_URL')}/subscription/success?customId=${customId}`,
-                    cancel_url: `${config.get('FRONTEND_URL')}/subscription/cancel?customId=${customId}`
+                    // return_url: `${config.get('FRONTEND_URL')}/subscription/success?customId=${customId}`,
+                    // cancel_url: `${config.get('FRONTEND_URL')}/subscription/cancel?customId=${customId}`
+                    returnUrl: `http://localhost:3001/join/success`,
+                    cancelUrl: `http://localhost:3001/join/cancel`,
                 },
                 subscriber: {
                     name: {
@@ -56,7 +58,7 @@ async function createPayPalSubscription({ planId, userData, customId, membership
             payPalRequestId: requestId
         };
 
-        const response = await subscriptionsController.subscriptionsCreate(request);
+        const response = await subscriptionsController.createSubscription(request);
         const subscription = response.result;
 
         console.log(`PayPal subscription created: ${subscription.id} for user: ${customId}`);

@@ -206,6 +206,12 @@
                 },
                 "password": {
                   "example": "any"
+                },
+                "paymentType": {
+                  "example": "any"
+                },
+                "planId": {
+                  "example": "any"
                 }
               }
             }
@@ -261,12 +267,6 @@
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
-                },
-                "membershipType": {
-                  "example": "any"
-                },
-                "planId": {
                   "example": "any"
                 },
                 "personalTitle": {
@@ -381,6 +381,9 @@
                   "example": "any"
                 },
                 "status": {
+                  "example": "any"
+                },
+                "changePassword": {
                   "example": "any"
                 }
               }
@@ -570,6 +573,16 @@
             "type": "string"
           }
         ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/user/create-subscription": {
+      "post": {
+        "description": "",
         "responses": {
           "default": {
             "description": ""

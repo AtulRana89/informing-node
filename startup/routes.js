@@ -18,6 +18,7 @@ const faq = require("../routes/faq");
 const content = require("../routes/contentManagements");
 const webview = require("../routes/webviews");
 const plans = require("../routes/plans");
+const subscriptions = require("../routes/subscriptions");
 const languageMiddleware = require("../middleware/language");
 
 
@@ -40,5 +41,6 @@ module.exports = async function (app) {
   app.use("/api/content", content);
   app.use("/api/webviews", webview);
   app.use("/api/plan", plans);
+  app.use("/api/subscription", subscriptions);
   app.use(error);
 };

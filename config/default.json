@@ -4,7 +4,7 @@
     "projectName": "informing_science",
     "jwtPrivateKey": "unsecureKey",
     "dbLink": "mongodb+srv://atuldev:atuldev123@informing.gru0xos.mongodb.net/?appName=informing",
-    "port": "4401",
+    "port": "5000",
     "requireAuth": true,
     "max_otp_attempts": 3,
     "otp_expiry_in_mins": 15,
@@ -23,7 +23,7 @@
     "S3_SECRET_KEY": "cHGrXyqT3BeHhlr5A3fKnkPnuea20u6KrcE3qTpCR5s",
     "backendUrl": "",
     "googleApiKey": "",
-    "PAYPAL_CLIENT_ID": "your_client_id",
-    "PAYPAL_CLIENT_SECRET": "your_client_secret",
+    "PAYPAL_CLIENT_ID": "",
+    "PAYPAL_CLIENT_SECRET": "",
     "FRONTEND_URL": "http://localhost:3000"
 }
