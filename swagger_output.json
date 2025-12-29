@@ -2164,6 +2164,16 @@
           }
         }
       }
+    },
+    "/api/subscription/paypal/webhook": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   }
 }
