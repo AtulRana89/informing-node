@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 
 const planSchema = new mongoose.Schema({
     id: { type: String, required: true, unique: true },
+    planType: String,
+    type: { type: String, enum: ["BASIC", "SPONSORING"], required: true },
     version: Number,
     product_id: String,
     name: String,

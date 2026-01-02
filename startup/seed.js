@@ -38,13 +38,13 @@ module.exports = async function () {
             console.log("Plans already exist. Skipping seed.");
             return;
         }
-
         const plans = [
             {
                 id: "P-98P507856D497622UNFETDNA",
                 version: 1,
                 product_id: "PROD-4KP56367VU896645C",
-                name: "Basic - 1 Year",
+                planType: "1y-basic",
+                name: "1 Year",
                 status: "ACTIVE",
                 description: "Basic membership for 1 year",
                 usage_type: "LICENSED",
@@ -103,6 +103,7 @@ module.exports = async function () {
                 id: "P-60U54129JF267354NNFETFXY",
                 version: 1,
                 product_id: "PROD-2J870760NC067493P",
+                planType: "1y-sponsor",
                 name: "Sponsoring - 1 Year",
                 status: "ACTIVE",
                 description: "Sponsoring membership for 1 year",
@@ -147,6 +148,7 @@ module.exports = async function () {
                 status: "ACTIVE",
                 version: 1,
                 product_id: "PROD-2J870760NC067493P",
+                planType: "5y-sponsor",
                 usage_type: "LICENSED",
                 billing_cycles: [{
                     pricing_scheme: {
@@ -166,6 +168,7 @@ module.exports = async function () {
                 status: "ACTIVE",
                 version: 1,
                 product_id: "PROD-2J870760NC067493P",
+                planType: "life-sponsor",
                 usage_type: "LICENSED",
                 billing_cycles: [{
                     pricing_scheme: {
@@ -185,6 +188,7 @@ module.exports = async function () {
                 status: "ACTIVE",
                 version: 1,
                 product_id: "PROD-4KP56367VU896645C",
+                planType: "life-basic",
                 usage_type: "LICENSED",
                 billing_cycles: [{
                     pricing_scheme: {
@@ -204,6 +208,7 @@ module.exports = async function () {
                 status: "ACTIVE",
                 version: 1,
                 product_id: "PROD-4KP56367VU896645C",
+                planType: "5y-basic",
                 usage_type: "LICENSED",
                 billing_cycles: [{
                     pricing_scheme: {

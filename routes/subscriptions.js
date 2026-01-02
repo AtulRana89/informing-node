@@ -7,7 +7,7 @@ const { success, failure, successList } = require("../helper/responseHelper.js")
 const { createPayPalSubscription, cancelSubscription } = require("../services/paypal.js");
 const { Subscription } = require("../models/subscription.js");
 const { User } = require("../models/user.js");
-const { WebhookData } = require("./models/webhookData.js");
+const { WebhookData } = require("../models/webhookData.js");
 
 // const { sendFcmNotification } = require("../services/fcmModule.js");
 

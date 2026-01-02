@@ -30,6 +30,7 @@ router.get("/list", async (req, res) => {
                 id: 1,
                 version: 1,
                 product_id: 1,
+                planType: 1,
                 name: 1,
                 status: 1,
                 description: 1,

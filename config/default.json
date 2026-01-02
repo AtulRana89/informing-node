@@ -23,7 +23,7 @@
     "S3_SECRET_KEY": "cHGrXyqT3BeHhlr5A3fKnkPnuea20u6KrcE3qTpCR5s",
     "backendUrl": "",
     "googleApiKey": "",
-    "PAYPAL_CLIENT_ID": "",
-    "PAYPAL_CLIENT_SECRET": "",
+    "PAYPAL_CLIENT_ID": "ATy1yaAt6LRPKybBgy6Yuy_pIKRSENq67tm7il2NpBlUPYznsI-JIDn_hE2UUvVj9U6t6HKXuwzYEmk1",
+    "PAYPAL_CLIENT_SECRET": "EIWr_Tz6iTg7p7oUVUinzlSm8hR09hlmFX-fnRK8iyurqsOptJ1SZDGNUHguEg4bf6bn4iVdZRGX9ix_",
     "FRONTEND_URL": "http://localhost:3000"
 }

@@ -13,6 +13,7 @@ const { validateUserRegister, validateUserEdit, validateUserLogin, validateForgo
 const { User } = require("../models/user.js");
 const { createPayPalSubscription, cancelSubscription } = require("../services/paypal.js");
 const { Subscription } = require("../models/subscription.js");
+const { Plan } = require("../models/plan.js");
 
 // const { sendFcmNotification } = require("../services/fcmModule.js");
 
@@ -41,7 +42,7 @@ router.post("/", async (req, res) => {
   });
   var encryptPassword = generateHash(req.body.password);
   user.password = encryptPassword;
-  const token = generateAuthToken(user._id, email, user.role);
+  const token = generateAuthToken(user._id, email, user.role[0]);
   user.accessToken = token;
 
   await user.save();
@@ -49,7 +50,8 @@ router.post("/", async (req, res) => {
 
   let membershipResponse = null;
   if (req.body.paymentType == "MEMBER") {
-    membershipResponse = await handleMembershipChange(user, req.body.paymentType, req.body.planId);
+    let plan = await Plan.findOne({ id: req.body.planId });
+    membershipResponse = await handleMembershipChange(user, req.body.paymentType, plan);
   }
   const response = {
     _id: user._id,
@@ -84,7 +86,7 @@ router.post("/login", async (req, res) => {
   const validPassword = compareHash(req.body.password, user.password);
   if (!validPassword) return failure(res, req.apiId, AUTH_CONSTANTS.INVALID_PASSWORD);
 
-  const token = generateAuthToken(user._id, user.email, user.role);
+  const token = generateAuthToken(user._id, email, user.role[0]);
   user.accessToken = token;
 
   await user.save();
@@ -488,7 +490,7 @@ router.delete("/:id", identityManager(["admin", "user", "superAdmin"]), async (r
   return success(res, req.apiId, USER_CONSTANTS.DELETED_SUCCESSFULLY);
 });
 
-async function handleMembershipChange(user, newMembershipType, planId) {
+async function handleMembershipChange(user, newMembershipType, plan) {
   try {
     // PAID Membership (BASIC or SPONSORING)
     if (!planId) {
@@ -505,7 +507,7 @@ async function handleMembershipChange(user, newMembershipType, planId) {
     // }
 
     const subscriptionData = await createPayPalSubscription({
-      planId: planId,
+      planId: plan.id,
       userData: {
         personalName: user.personalName,
         familyName: user.familyName,
@@ -519,14 +521,14 @@ async function handleMembershipChange(user, newMembershipType, planId) {
     user.membershipType = newMembershipType;
     user.membershipStatus = 'PENDING';
     user.paypalSubscriptionId = subscriptionData.subscriptionId;
-    user.subscriptionPlanId = planId;
+    user.subscriptionPlanId = plan.id;
 
     // Create subscription record
-    const amount = newMembershipType === 'BASIC' ? 75 : 1000;
+    const amount = plan?.billing_cycles?.[0]?.pricing_scheme?.fixed_price?.value;
 
     await Subscription.create({
       userId: user._id,
-      planId: planId,
+      planId: plan.id,
       planType: 'BASIC',
       paypalSubscriptionId: subscriptionData.subscriptionId,
       status: 'PENDING',
