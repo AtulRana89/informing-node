@@ -1834,11 +1834,6 @@
             "name": "faqId",
             "in": "query",
             "type": "string"
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
@@ -2022,11 +2017,6 @@
           {
             "name": "text",
             "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
             "type": "string"
           }
         ],
