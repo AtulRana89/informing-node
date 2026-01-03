@@ -32,7 +32,7 @@ router.post("/create", identityManager(["superAdmin"], {}), async (req, res) => 
   return success(res, req.apiId, "FAQ created successfully", faq);
 });
 
-router.get("/list", {}), async (req, res) => {
+router.get("/list", async (req, res) => {
   let criteria = {};
   criteria.status = { $ne: "deleted" };
 
