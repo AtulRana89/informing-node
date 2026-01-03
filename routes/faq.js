@@ -36,9 +36,9 @@ router.get("/list", async (req, res) => {
   let criteria = {};
   criteria.status = { $ne: "deleted" };
 
-  if (req.jwtData.role === "user") {
-    criteria.status = "active";
-  }
+  // if (req.jwtData.role === "user") {
+  //   criteria.status = "active";
+  // }
 
   let skipVal = isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset);
   let limitVal = isNaN(parseInt(req.query.limit)) ? 50 : parseInt(req.query.limit);
