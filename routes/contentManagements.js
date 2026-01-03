@@ -70,7 +70,7 @@ router.delete("/:id", identityManager(["superAdmin"]), async (req, res) => {
     return success(res, req.apiId, CONTENT_CONSTANTS.DELETE_SUCCESS);
 });
 
-router.get("/list", identityManager(["user", "superAdmin", "admin"]), async (req, res) => {
+router.get("/list", async (req, res) => {
     const criteria = {};
 
     const skipVal = isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset);
