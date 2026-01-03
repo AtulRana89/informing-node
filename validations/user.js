@@ -68,7 +68,7 @@ function validateUserEdit(req) {
     department: Joi.string().max(255).optional().allow(""),
     positionTitle: Joi.string().max(255).optional().allow(""),
     orcid: Joi.string().optional().allow(""),
-    resume: Joi.string().uri().optional().allow(""),
+    resume: Joi.string().allow(""),
     bio: Joi.string().max(1000).optional().allow(""),
     note: Joi.string().max(500).optional().allow(""),
     allowProfile: Joi.boolean().optional(),

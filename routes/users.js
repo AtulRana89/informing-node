@@ -49,8 +49,10 @@ router.post("/", async (req, res) => {
 
 
   let membershipResponse = null;
+  console.log("req.body.paymentTyp :", req.body.paymentTyp)
   if (req.body.paymentType == "MEMBER") {
     let plan = await Plan.findOne({ id: req.body.planId });
+    console.log("plan :", plan)
     membershipResponse = await handleMembershipChange(user, req.body.paymentType, plan);
   }
   const response = {
@@ -493,7 +495,7 @@ router.delete("/:id", identityManager(["admin", "user", "superAdmin"]), async (r
 async function handleMembershipChange(user, newMembershipType, plan) {
   try {
     // PAID Membership (BASIC or SPONSORING)
-    if (!planId) {
+    if (!plan.id) {
       throw new Error('Plan ID is required for paid membership');
     }
 

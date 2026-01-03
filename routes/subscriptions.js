@@ -23,7 +23,7 @@ router.post("/paypal/webhook", async (req, res) => {
         console.log("Resource:", webhookEvent.resource);
 
         // Example: handle successful payment
-        if (data.event_type === "PAYMENT.CAPTURE.COMPLETED") {
+        if (data.event_type === "PAYMENT.SALE.COMPLETED") {
             console.log("✅ Payment completed");
 
             const webhook = new WebhookData({

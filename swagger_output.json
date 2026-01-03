@@ -207,6 +207,9 @@
                 "password": {
                   "example": "any"
                 },
+                "paymentTyp": {
+                  "example": "any"
+                },
                 "paymentType": {
                   "example": "any"
                 },
