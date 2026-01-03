@@ -99,3 +99,45 @@ module.exports = router;
 //       }
 //     ]
 //   }
+
+
+
+
+
+
+
+
+// 🔔 PAYPAL WEBHOOK data : {
+//     id: 'WH-64V49983722610739-6PJ90236AA143151E',
+//     event_version: '1.0',
+//     create_time: '2026-01-03T06:35:01.442Z',
+//     resource_type: 'sale',
+//     event_type: 'PAYMENT.SALE.COMPLETED',
+//     summary: 'Payment completed for $ 75.0 USD',
+//     resource: {
+//       billing_agreement_id: 'I-C0PUY8SABESH',
+//       amount: { total: '75.00', currency: 'USD', details: [Object] },
+//       payment_mode: 'INSTANT_TRANSFER',
+//       update_time: '2026-01-03T06:34:57Z',
+//       create_time: '2026-01-03T06:34:57Z',
+//       protection_eligibility_type: 'ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE',
+//       transaction_fee: { currency: 'USD', value: '3.81' },
+//       protection_eligibility: 'ELIGIBLE',
+//       links: [ [Object], [Object] ],
+//       id: '9WF66082R84241037',
+//       state: 'completed',
+//       invoice_number: ''
+//     },
+//     links: [
+//       {
+//         href: 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-64V49983722610739-6PJ90236AA143151E',
+//         rel: 'self',
+//         method: 'GET'
+//       },
+//       {
+//         href: 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-64V49983722610739-6PJ90236AA143151E/resend',
+//         rel: 'resend',
+//         method: 'POST'
+//       }
+//     ]
+//   }
