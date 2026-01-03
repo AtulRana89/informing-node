@@ -50,7 +50,7 @@ router.post("/", async (req, res) => {
 
   let membershipResponse = null;
   console.log("req.body.paymentTyp :", req.body.paymentTyp)
-  if (req.body.paymentType == "MEMBER") {
+  if (req.body.paymentType != "FREE") {
     let plan = await Plan.findOne({ id: req.body.planId });
     console.log("plan :", plan)
     membershipResponse = await handleMembershipChange(user, req.body.paymentType, plan);
