@@ -507,9 +507,10 @@ async function handleMembershipChange(user, newMembershipType, plan) {
     //     reason: "Changing membership plan"
     //   });
     // }
-
+    let customId = `${user._id.toString()}`;
     const subscriptionData = await createPayPalSubscription({
       planId: plan.id,
+      custom_id: `user_${customId}`,
       userData: {
         personalName: user.personalName,
         familyName: user.familyName,
@@ -533,97 +534,6 @@ async function handleMembershipChange(user, newMembershipType, plan) {
       planId: plan.id,
       planType: 'BASIC',
       paypalSubscriptionId: subscriptionData.subscriptionId,
-      status: 'PENDING',
-      paymentStatus: 'PENDING',
-      amount: amount,
-      startDate: new Date(),
-      endDate: null,
-    });
-
-
-    // planType: { type: String, enum: ["FREE_ASSOCIATE", "BASIC", "SPONSORING"], required: true },
-    // duration: { type: String, enum: ["1_YEAR", "5_YEAR", "LIFE", "ASSOCIATE"] },
-    // transactionId: { type: String },
-    // paypalOrderId: { type: String },
-
-    // Return approval URL for frontend to redirect
-    return {
-      approvalRequired: true,
-      subscriptionId: subscriptionData.subscriptionId,
-      approvalUrl: subscriptionData.approvalUrl,
-      status: subscriptionData.status,
-      links: subscriptionData.links
-    };
-
-  } catch (error) {
-    console.error('Membership change error:', error);
-    throw error;
-  }
-}
-
-async function handleMembershipChange1(user, newMembershipType, planId) {
-  try {
-    // FREE Membership
-    // if (newMembershipType === 'FREE') {
-    //   user.membershipType = 'FREE';
-    //   user.membershipStatus = 'ACTIVE';
-    //   user.paypalSubscriptionId = null;
-    //   user.subscriptionPlanId = null;
-
-    //   // Create free subscription record
-    //   await Subscription.create({
-    //     planType: 'FREE_ASSOCIATE',
-    //     duration: 'ASSOCIATE',
-    //     userId: user._id,
-    //     planId: 'FREE',
-    //     paymentStatus: 'FREE',
-    //     status: 'ACTIVE',
-    //     amount: '0',
-    //     startDate: new Date(),
-    //     endDate: null,
-    //   });
-    //   return { approvalRequired: false };
-    // }
-
-    // PAID Membership (BASIC or SPONSORING)
-    if (!planId) {
-      throw new Error('Plan ID is required for paid membership');
-    }
-
-    // Check if user already has active PayPal subscription
-    // if (user.paypalSubscriptionId) {
-    //   // Cancel existing subscription first
-    //   await cancelSubscription({
-    //     subscriptionId: user.paypalSubscriptionId,
-    //     reason: "Changing membership plan"
-    //   });
-    // }
-
-    const subscriptionData = await createPayPalSubscription({
-      planId: planId,
-      userData: {
-        personalName: user.personalName,
-        familyName: user.familyName,
-        email: user.email
-      },
-      customId: user._id.toString(),
-      // membershipType: plan
-    });
-
-    // Update user with pending subscription
-    user.membershipType = newMembershipType;
-    user.membershipStatus = 'PENDING';
-    user.paypalSubscriptionId = subscriptionData.subscriptionId;
-    user.subscriptionPlanId = planId;
-
-    // Create subscription record
-    const amount = newMembershipType === 'BASIC' ? 75 : 1000;
-
-    await Subscription.create({
-      userId: user._id,
-      planId: planId,
-      planType: 'BASIC',
-      paypalSubscriptionId: paypalResult.subscriptionId,
       status: 'PENDING',
       paymentStatus: 'PENDING',
       amount: amount,

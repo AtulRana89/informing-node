@@ -46,8 +46,12 @@ async function createPayPalSubscription({ planId, userData, customId, membership
                     // returnUrl: `http://localhost:3001/join/success`,
                     // cancelUrl: `http://localhost:3001/join/cancel`,
                     // Update these URLs to redirect to your main join page
-                    return_url: `http://localhost:3000/join-isi?status=success&subscriptionId=${customId}`,
-                    cancel_url: `http://localhost:3000/join-isi?status=cancel&subscriptionId=${customId}`
+                    // return_url: `http://localhost:3000/join-isi?status=success&subscriptionId=${customId}`,
+                    // cancel_url: `http://localhost:3000/join-isi?status=cancel&subscriptionId=${customId}`
+
+                    return_url: `http://localhost:3000/paypal/success?subscriptionId={subscription_id}&userId=${customId}`,
+                    cancel_url: `http://localhost:3000/paypal/cancel?userId=${customId}`
+
                 },
                 subscriber: {
                     name: {

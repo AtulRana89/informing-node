@@ -56,6 +56,100 @@ router.post("/paypal/webhook", async (req, res) => {
     }
 });
 
+// Handle PayPal return URL after successful payment
+router.get('/paypal/success', async (req, res) => {
+    try {
+        const { subscriptionId, userId } = req.query;
+        console.log('PayPal success handler called with subscriptionId:', subscriptionId, 'and userId:', userId);
+        if (!subscriptionId || !userId) {
+            return res.status(400).json({
+                error: 'Missing subscriptionId or userId'
+            });
+        }
+
+        // asssss
+        const subscription = await Subscription.findOne(
+            { paypalSubscriptionId: subscriptionId })
+
+
+        console.log("subscription data : ", subscription);
+        //asssss
+
+
+        // 1. Get subscription details from PayPal
+        // const subscriptionDetails = await getSubscriptionDetails(subscriptionId);
+
+        // 2. Update user in database
+        // const user = await User.findById(userId);
+        // if (!user) {
+        //     return res.status(404).json({ error: 'User not found' });
+        // }
+
+        // 3. Update user membership status
+        // user.membershipStatus = 'ACTIVE';
+        // user.paypalSubscriptionId = subscriptionId;
+        // user.subscriptionStatus = 'ACTIVE';
+        // await user.save();
+
+        // 4. Update or create subscription record
+        // const subscription = await Subscription.findOneAndUpdate(
+        //     { paypalSubscriptionId: subscriptionId },
+        //     {
+        //         userId: userId,
+        //         status: 'ACTIVE',
+        //         paymentStatus: 'PAID',
+        //         startDate: new Date(),
+        //         endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
+        //         lastPaymentDate: new Date()
+        //     },
+        //     { upsert: true, new: true }
+        // );
+
+        // 5. Create payment record
+        // if (subscriptionDetails.billing_info && subscriptionDetails.billing_info.last_payment) {
+        //     await Payment.create({
+        //         userId: userId,
+        //         subscriptionId: subscription._id,
+        //         paypalSubscriptionId: subscriptionId,
+        //         amount: subscriptionDetails.billing_info.last_payment.amount.value,
+        //         currency: subscriptionDetails.billing_info.last_payment.amount.currency_code,
+        //         status: 'COMPLETED',
+        //         paymentDate: new Date(),
+        //         transactionId: subscriptionDetails.billing_info.last_payment.id
+        //     });
+        // }
+
+        // 6. Send confirmation email
+        // await sendMembershipConfirmationEmail(user.email, {
+        //     userName: `${user.personalName} ${user.familyName}`,
+        //     membershipType: user.membershipType,
+        //     subscriptionId: subscriptionId,
+        //     startDate: new Date().toLocaleDateString()
+        // });
+
+        // 7. Redirect to frontend success page
+        res.redirect(`http://localhost:3000/join-isi/success?userId=${userId}&subscriptionId=${subscriptionId}`);
+
+    } catch (error) {
+        console.error('PayPal success handler error:', error);
+        res.redirect(`http://localhost:3000/join-isi/error?message=${encodeURIComponent(error.message)}`);
+    }
+});
+
+// // Helper function to get subscription details from PayPal
+// async function getSubscriptionDetails(subscriptionId) {
+//     try {
+//         const request = {
+//             subscriptionId: subscriptionId
+//         };
+
+//         const response = await subscriptionsController.getSubscriptionDetails(request);
+//         return response.result;
+//     } catch (error) {
+//         console.error('Error getting subscription details:', error);
+//         throw error;
+//     }
+// }
 module.exports = router;
 
 // PAYPAL WEBHOOK data : {
