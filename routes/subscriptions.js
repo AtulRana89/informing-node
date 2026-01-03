@@ -33,6 +33,11 @@ router.post("/paypal/webhook", async (req, res) => {
             await webhook.save();
             console.log("Webhook saved");
 
+            const { billing_agreement_id } = data.resource;
+            const subscription = await Subscription.findOne({ paypalSubscriptionId: billing_agreement_id })
+
+            console.log("subscription data : ", subscription);
+
             // await User.updateOne(
             //     { customId: customId },
             //     {
