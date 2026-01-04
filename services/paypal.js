@@ -49,8 +49,8 @@ async function createPayPalSubscription({ planId, userData, customId, membership
                     // return_url: `http://localhost:3000/join-isi?status=success&subscriptionId=${customId}`,
                     // cancel_url: `http://localhost:3000/join-isi?status=cancel&subscriptionId=${customId}`
 
-                    return_url: `http://localhost:3000/paypal/success?subscriptionId={subscription_id}&userId=${customId}`,
-                    cancel_url: `http://localhost:3000/paypal/cancel?userId=${customId}`
+                    return_url: `https://www.informingscience.fyi/paypal/success?subscriptionId={subscription_id}&userId=${customId}`,
+                    cancel_url: `https://www.informingscience.fyi/paypal/cancel?userId=${customId}`
 
                 },
                 subscriber: {

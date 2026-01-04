@@ -38,17 +38,29 @@ router.post("/paypal/webhook", async (req, res) => {
 
             console.log("subscription data : ", subscription);
 
-            // await User.updateOne(
-            //     { customId: customId },
-            //     {
-            //         $set: {
-            //             subscriptionId,
-            //             membershipActive: true,
-            //             membershipStatus: "ACTIVE",
-            //             membershipStartedAt: new Date()
-            //         }
-            //     }
-            // );
+            await User.updateOne(
+                { customId: subscription?.userId },
+                {
+                    $set: {
+                        paypalSubscriptionId: subscription?.paypalSubscriptionId,
+                        membershipType: subscription?.membershipType,
+                        membershipActive: true,
+                        membershipStatus: "ACTIVE",
+                        subscriptionPlanId: subscription?.planId,
+                        membershipTypes: subscription?.planType === 'BASIC' ? 'isi_member' : 'isi_sponsored_member'
+                    }
+                }
+            );
+
+            await Subscription.updateOne(
+                { userId: subscription?.userId },
+                {
+                    $set: {
+                        status: 'ACTIVE',
+                        paymentStatus: "COMPLETED",
+                    }
+                }
+            );
 
             // console.log("Amount:", webhookEvent.resource.amount.value);
             // console.log("Currency:", webhookEvent.resource.amount.currency_code);
