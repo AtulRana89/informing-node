@@ -139,7 +139,7 @@ router.post("/verify", async (req, res) => {
         }
 
         if (req.body.type === "UFP" && email) {
-            return success(res, req.apiId, "OTP verified", req.body.type);
+            // return success(res, req.apiId, "OTP verified", req.body.type);
         }
 
         let otpToken = new OtpToken({
@@ -152,7 +152,7 @@ router.post("/verify", async (req, res) => {
 
         otpToken.token = otpToken.generateToken();
         await otpToken.save();
-
+        // console.log("otpToken.token  :", otpToken.token)
         return success(res, req.apiId, "OTP verified", { otpToken: otpToken.token });
     }
 
