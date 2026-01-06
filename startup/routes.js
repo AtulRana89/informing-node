@@ -19,6 +19,7 @@ const content = require("../routes/contentManagements");
 const webview = require("../routes/webviews");
 const plans = require("../routes/plans");
 const subscriptions = require("../routes/subscriptions");
+const otps = require("../routes/otps");
 const languageMiddleware = require("../middleware/language");
 
 
@@ -42,5 +43,7 @@ module.exports = async function (app) {
   app.use("/api/webviews", webview);
   app.use("/api/plan", plans);
   app.use("/api/subscription", subscriptions);
+  app.use("/api/otp", otps);
+
   app.use(error);
 };
